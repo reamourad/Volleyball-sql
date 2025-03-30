@@ -1,0 +1,39 @@
+footer {
+    background-color: #333;
+    color: white;
+    padding: 2rem 5%;
+    margin-top: 2rem;
+    text-align: center;
+}
+
+.footer-content {
+    display: inline-flex;
+    align-items: center;
+    gap: 8rem; 
+    max-width: 100%;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+footer h3 {
+    margin: 0;
+    font-size: 1.2rem;
+    display: inline-block;
+}
+
+footer p {
+    margin: 0;
+    line-height: 1.8;
+    display: inline-block;
+    text-align: left;
+}
+
+footer a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
