@@ -25,11 +25,7 @@
 
             <!-- Family Members Dropdown -->
             <li class="dropdown">
-                <a href="#">Family Members</a>
-                <ul class="dropdown-content">
-                    <li><a href="familyMembers\index.php">Family Member List</a></li>
-                    <li><a href="#">Detailed Family Member</a></li>
-                </ul>
+                <a href="familyMembers/index.php">Family Members</a>
             </li>
 
             <!-- Personnel Dropdown -->

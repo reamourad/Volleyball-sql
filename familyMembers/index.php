@@ -1,4 +1,6 @@
 <?php
+    $page_title = "Family Members";
+
     function displayFamilyMember(){
         require '../database.php';
         $query = "";
@@ -28,11 +30,7 @@
 
             <!-- Family Members Dropdown -->
             <li class="dropdown">
-                <a href="#">Family Members</a>
-                <ul class="dropdown-content">
-                    <li><a href="index.php">Family Member List</a></li>
-                    <li><a href="#">Detailed Family Member</a></li>
-                </ul>
+                <a href="index.php">Family Members</a>
             </li>
 
             <!-- Personnel Dropdown -->
