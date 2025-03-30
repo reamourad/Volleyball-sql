@@ -30,7 +30,7 @@
             <li class="dropdown">
                 <a href="#">Family Members</a>
                 <ul class="dropdown-content">
-                    <li><a href="familyMembers\index.php">Family Member List</a></li>
+                    <li><a href="index.php">Family Member List</a></li>
                     <li><a href="#">Detailed Family Member</a></li>
                 </ul>
             </li>
@@ -78,34 +78,35 @@
     <main>
         <div class="list-container">
             <h2>List of Members</h2>
+            <button class="add-btn" onclick="window.location.href='add.php'">Add New Family Member</button>
             <table class="data-table">
-            <thead>
-                <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Phone Number</th>
-                <th>Location</th>
-                <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>John</td>
-                    <td>Doe</td>
-                    <td>(123) 456-7890</td>
-                    <td>New York</td>
-                    <td><a href="#">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
-                </tr>
-                <tr>
-                    <td>Jane</td>
-                    <td>Smith</td>
-                    <td>(987) 654-3210</td>
-                    <td>Los Angeles</td>
-                    <td><a href="#">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
-                </tr>
-                <!-- Displayed dynamically -->
-                
-            </tbody>
+                <thead>
+                    <tr>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Phone Number</th>
+                    <th>Location</th>
+                    <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>John</td>
+                        <td>Doe</td>
+                        <td>(123) 456-7890</td>
+                        <td>New York</td>
+                        <td><a href="show-details.php">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
+                    </tr>
+                    <tr>
+                        <td>Jane</td>
+                        <td>Smith</td>
+                        <td>(987) 654-3210</td>
+                        <td>Los Angeles</td>
+                        <td><a href="show-details.php">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
+                    </tr>
+                    <!-- Displayed dynamically -->
+                    
+                </tbody>
             </table>
         </div>
     </main>
