@@ -114,7 +114,7 @@
             <p>
                 Réa Mourad (40310288) <br>
                 Elizabeth O'Meara (40065959) <br>
-                Aryan Jitendra Rana (Missing ID) <br>
+                Amani-Myriam Maamar (Missing ID) <br>
                 Anh Thy Vu (40270849) <br>
                 Yani Zahouani (40285973)
             </p>
