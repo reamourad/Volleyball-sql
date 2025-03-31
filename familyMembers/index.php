@@ -93,14 +93,14 @@
                         <td>Doe</td>
                         <td>(123) 456-7890</td>
                         <td>New York</td>
-                        <td><a href="show-details.php">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
+                        <td><a href="show-details.php">View</a> | <a href="edit.php">Edit</a> | <a href="#">Delete</a></td>
                     </tr>
                     <tr>
                         <td>Jane</td>
                         <td>Smith</td>
                         <td>(987) 654-3210</td>
                         <td>Los Angeles</td>
-                        <td><a href="show-details.php">View</a> | <a href="#">Edit</a> | <a href="#">Delete</a></td>
+                        <td><a href="show-details.php">View</a> | <a href="edit.php">Edit</a> | <a href="#">Delete</a></td>
                     </tr>
                     <!-- Displayed dynamically -->
                     
