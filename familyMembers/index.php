@@ -1,9 +1,33 @@
 <?php
     $page_title = "Family Members";
+    require_once '../database.php';
 
-    function displayFamilyMember(){
-        require '../database.php';
-        $query = "";
+    $query = "
+        SELECT 
+            p.PersonID,
+            p.FirstName,
+            p.LastName,
+            fm.Email,
+            p.PhoneNumber,
+            p.MedicareNumber,
+            p.DateOfBirth,
+            p.Address,
+            p.City,
+            p.Province,
+            p.PostalCode
+        FROM
+            FamilyMember fm
+        JOIN
+            Person p ON fm.PersonID = p.PersonID
+        ORDER BY
+            p.PersonID
+    ";
+
+    // Execute the query
+    $result = mysqli_query($conn, $query);
+
+    if (!$result) {
+        die("Query failed: " . mysqli_error($conn));
     }
 ?>
 
@@ -75,35 +99,46 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>List of Members</h2>
+            <h2>List of Family Members</h2>
             <button class="add-btn" onclick="window.location.href='add.php'">Add New Family Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
-                    <th>First Name</th>
-                    <th>Last Name</th>
-                    <th>Phone Number</th>
-                    <th>Location</th>
-                    <th>Actions</th>
+                        <th>Family Member ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone Number</th>
+                        <th>Medicare Number</th>
+                        <th>Date of Birth</th>
+                        <th>Address</th>
+                        <th>City</th>
+                        <th>Province</th>
+                        <th>Postal Code</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>John</td>
-                        <td>Doe</td>
-                        <td>(123) 456-7890</td>
-                        <td>New York</td>
-                        <td><a href="show-details.php">View</a> | <a href="edit.php">Edit</a> | <a href="#">Delete</a></td>
-                    </tr>
-                    <tr>
-                        <td>Jane</td>
-                        <td>Smith</td>
-                        <td>(987) 654-3210</td>
-                        <td>Los Angeles</td>
-                        <td><a href="show-details.php">View</a> | <a href="edit.php">Edit</a> | <a href="#">Delete</a></td>
-                    </tr>
-                    <!-- Displayed dynamically -->
-                    
+                    <?php while($row = mysqli_fetch_assoc($result)): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['PersonID']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['MedicareNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['DateOfBirth']) ?></td>
+                            <td><?= htmlspecialchars($row['Address']) ?></td>
+                            <td><?= htmlspecialchars($row['City']) ?></td>
+                            <td><?= htmlspecialchars($row['Province']) ?></td>
+                            <td><?= htmlspecialchars($row['PostalCode']) ?></td>
+                            <td class="action-links">
+                                <a href="show-details.php?id=<?= $row['PersonID'] ?>">View</a>
+                                <a href="edit.php?id=<?= $row['PersonID'] ?>">Edit</a>
+                                <a href="delete.php?id=<?= $row['PersonID'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
