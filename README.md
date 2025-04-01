@@ -8,7 +8,7 @@ This project implements a graphical user interface (GUI) to facilitate the manag
 |------------------------- |-------------------|
 | **Réa Mourad**           | 40310288          |
 | **Elizabeth O'Meara**    | 40065959          |
-| **Amani-Myriam Maamar**  | [Teammate 3 ID]   |
+| **Amani-Myriam Maamar**  | 40191681          |
 | **Anh Thy Vu**           | 40270849          |
 | **Yani Zahouani**        | 40285973          |
 
