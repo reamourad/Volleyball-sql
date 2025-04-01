@@ -59,8 +59,18 @@ input[type="checkbox"] {
     all: unset;
     -webkit-appearance: checkbox;
     appearance: checkbox; 
-    accent-color: var(--color-primary);
     margin: 1rem;
+}
+
+input[type="radio"] {
+    all: unset;
+    -webkit-appearance: radio;
+    appearance: radio;
+    margin-right: 0.5rem;
+}
+
+.radio-container p{
+    font-size: 1.5rem;
 }
 
 button {
