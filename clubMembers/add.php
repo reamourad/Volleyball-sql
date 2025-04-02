@@ -86,36 +86,14 @@
         <h2>MYVC Management System</h2>
         <ul>
             <li><a href="../index.php">Home</a></li>
-            <!-- Club Members Dropdown -->
-            <li class="dropdown">
-                <a href="#">Club Members</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Club Member List</a></li>
-                    <li><a href="#">Team Formation</a></li>
-                </ul>
-            </li>
+            <li><a href="index.php">Club Members</a></li>
+            <li><a href="../familyMembers/index.php">Family Members</a></li>
+            <li><a href="../personnels/index.php">Personnel</a></li>
+            <li><a href="../locations/index.php">Locations</a></li>
+            <li><a href="../teamFormations/index.php">Team Formation</a></li>
+            <li><a href="#">Events</a></li>
 
-            <!-- Family Members Dropdown -->
-            <li class="dropdown">
-                <a href="index.php">Family Members</a>
-            </li>
 
-            <!-- Personnel Dropdown -->
-            <li class="dropdown">
-                <a href="#">Personnel</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Personnel List</a></li>
-                </ul>
-            </li>
-
-            <!-- Locations Dropdown -->
-            <li class="dropdown">
-                <a href="#">Locations</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Location Lists</a></li>
-                    <li><a href="#">Events at Location</a></li>
-                </ul>
-            </li>
 
             <!-- Email Logs Dropdown -->
             <li class="dropdown">
