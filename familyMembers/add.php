@@ -136,8 +136,6 @@
             <!-- Confirming the addition -->
             <?php if(isset($error)):?>
                 <div class="error">Error: <? htmlspecialchars($error)?></div>
-            <?php elseif (isset($_GET['success'])): ?>
-                <div class="success">Family member added successfully!</div>
             <?php endif; ?>
 
             <form action="add.php" method="POST">

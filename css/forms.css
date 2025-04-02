@@ -87,6 +87,16 @@ button {
     margin-bottom: 1rem;
     transition: background-color 0.3s ease;
 }
+
 button:hover {
     background-color: #27ae60;
+}
+
+.cancel-btn {
+    background-color: #3498db;
+    transition: background-color 0.3s ease;
+}
+
+.cancel-btn:hover {
+    background-color: #5dade2;
 }
