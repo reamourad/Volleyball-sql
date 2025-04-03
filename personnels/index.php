@@ -46,8 +46,8 @@
         <ul>
             <li><a href="../index.php">Home</a></li>
             <li><a href="../clubMembers/index.php">Club Members</a></li>
-            <li><a href="index.php">Family Members</a></li>
-            <li><a href="../personnels/index.php">Personnel</a></li>
+            <li><a href="../familyMembers/index.php">Family Members</a></li>
+            <li><a href="index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
             <li><a href="../teamFormations/index.php">Team Formation</a></li>
             <li><a href="#">Events</a></li>
