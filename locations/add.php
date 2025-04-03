@@ -87,7 +87,7 @@
     <!-- Main Section -->
     <main>
         <div class="form-container">
-            <h1>Add New Personnel</h1>
+            <h1>Add New Location</h1>
 
             <!-- Confirming the addition -->
             <?php if(isset($error)): ?>
