@@ -4,6 +4,7 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         //Get values
+        $isPrimary = ($_POST['family-type'] === 'primary') ? 1 : 0;
         $firstName = mysqli_real_escape_string($conn, $_POST['first-name']);
         $lastName = mysqli_real_escape_string($conn, $_POST['last-name']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -21,10 +22,10 @@
         try {
             //Insert into Person
             $personQuery = "
-                INSERT INTO Person (SSN, FirstName, LastName, MedicareNumber, DateOfBirth, PhoneNumber, Address, City, Province, PostalCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO Person (SSN, FirstName, LastName, MedicareNumber, DateOfBirth, Email, PhoneNumber, Address, City, Province, PostalCode) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ";
             $stmt = mysqli_prepare($conn, $personQuery);
-            mysqli_stmt_bind_param($stmt, 'ssssssssss', $sin, $firstName, $lastName, $medicare, $dob, $phone, $address, $city, $province, $postalCode);
+            mysqli_stmt_bind_param($stmt, 'issssssssss', $sin, $firstName, $lastName, $medicare, $dob, $email, $phone, $address, $city, $province, $postalCode);
         
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to add Person: " . mysqli_error($conn));
@@ -33,10 +34,10 @@
             //Insert into FamilyMember
             $personID = mysqli_insert_id($conn);
             $familyQuery = "
-                INSERT INTO FamilyMember (PersonID, Email) VALUES (?, ?)
+                INSERT INTO FamilyMember (PersonID, isPrimary) VALUES (?, ?)
             ";
             $stmt = mysqli_prepare($conn, $familyQuery);
-            mysqli_stmt_bind_param($stmt, "is", $personID, $email);
+            mysqli_stmt_bind_param($stmt, "ii", $personID, $isPrimary);
 
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to add FamilyMember: " . mysqli_error($conn));
@@ -112,11 +113,17 @@
             <h1>Add New Family Members</h1>
 
             <!-- Confirming the addition -->
-            <?php if(isset($error)):?>
-                <div class="error">Error: <? htmlspecialchars($error)?></div>
+            <?php if(isset($error)): ?>
+                <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
             <form action="add.php" method="POST">
+                <label for="family-type">Family Member Type *:</label>
+                <select name="family-type" id="family-type" required>
+                    <option value="primary" <?= isset($_POST['family-type']) && $_POST['family-type'] === 'primary' ? 'selected' : '' ?>>Primary</option>
+                    <option value="secondary" <?= isset($_POST['family-type']) && $_POST['family-type'] === 'secondary' ? 'selected' : '' ?>>Secondary</option>
+                </select>
+                <br>
                 <label for="first-name">First Name *:</label>
                 <input type="text" name="first-name" id="first-name" required
                     value="<?= isset($_POST['first-name']) ? htmlspecialchars($_POST['first-name']) : '' ?>"
@@ -163,9 +170,20 @@
                 >
                 <br>
                 <label for="province">Province *:</label>
-                <input type="text" name="province" id="province" required
-                    value="<?= isset($_POST['province']) ? htmlspecialchars($_POST['province']) : '' ?>"
-                >
+                <select name="province" id="province" required>
+                    <option value="AB" <?= isset($_POST['province']) && $_POST['province'] === 'AB' ? 'selected' : '' ?>>Alberta (AB)</option>
+                    <option value="NL" <?= isset($_POST['province']) && $_POST['province'] === 'NL' ? 'selected' : '' ?>>Newfoundland and Labrador (NL)</option>
+                    <option value="NS" <?= isset($_POST['province']) && $_POST['province'] === 'NS' ? 'selected' : '' ?>>Nova Scotia (NS)</option>
+                    <option value="PE" <?= isset($_POST['province']) && $_POST['province'] === 'PE' ? 'selected' : '' ?>>Prince Edward Island (PE)</option>
+                    <option value="BC" <?= isset($_POST['province']) && $_POST['province'] === 'BC' ? 'selected' : '' ?>>British Columbia (BC)</option>
+                    <option value="QC" <?= isset($_POST['province']) && $_POST['province'] === 'QC' ? 'selected' : '' ?>>Quebec (QC)</option>
+                    <option value="ON" <?= isset($_POST['province']) && $_POST['province'] === 'ON' ? 'selected' : '' ?>>Ontario (ON)</option>
+                    <option value="MB" <?= isset($_POST['province']) && $_POST['province'] === 'MB' ? 'selected' : '' ?>>Manitoba (MB)</option>
+                    <option value="SK" <?= isset($_POST['province']) && $_POST['province'] === 'SK' ? 'selected' : '' ?>>Saskatchewan (SK)</option>
+                    <option value="YT" <?= isset($_POST['province']) && $_POST['province'] === 'YT' ? 'selected' : '' ?>>Yukon (YT)</option>
+                    <option value="NT" <?= isset($_POST['province']) && $_POST['province'] === 'NT' ? 'selected' : '' ?>>Northwest Territories (NT)</option>
+                    <option value="NU" <?= isset($_POST['province']) && $_POST['province'] === 'NU' ? 'selected' : '' ?>>Nunavut (NU)</option>
+                </select>
                 <br>
                 <label for="postal-code">Postal Code *:</label>
                 <input type="text" name="postal-code" id="postal-code" required

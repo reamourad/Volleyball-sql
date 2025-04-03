@@ -39,7 +39,7 @@
         //Get values
         $firstName = mysqli_real_escape_string($conn, $_POST['first-name']);
         $lastName = mysqli_real_escape_string($conn, $_POST['last-name']);
-        // $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
         $dob = !empty($_POST['dob']) ? mysqli_real_escape_string($conn, $_POST['dob']) : null;
         $sin = !empty($_POST['sin']) ? mysqli_real_escape_string($conn, $_POST['sin']) : null;
         $medicare = !empty($_POST['medicare-card']) ? mysqli_real_escape_string($conn, $_POST['medicare-card']) : null;
@@ -68,6 +68,7 @@
                     LastName = ?,
                     MedicareNumber = ?,
                     DateOfBirth = ?,
+                    Email = ?,
                     PhoneNumber = ?,
                     Address = ?,
                     City = ?,
@@ -77,7 +78,7 @@
                     PersonID = ?
             ";
             $stmt = mysqli_prepare($conn, $updatePersonQuery);
-            mysqli_stmt_bind_param($stmt, "ssssssssssi", $sin, $firstName, $lastName, $medicare, $dob, $phone, $address, $city, $province, $postalCode, $personID);
+            mysqli_stmt_bind_param($stmt, "sssssssssssi", $sin, $firstName, $lastName, $medicare, $dob, $email, $phone, $address, $city, $province, $postalCode, $personID);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to edit Person: " . mysqli_error($conn));
@@ -218,9 +219,20 @@
                 <br>
 
                 <label for="province">Province *:</label>
-                <input type="text" name="province" id="province" required
-                    value="<?= htmlspecialchars($clubMember['Province']) ?>">
-                <br>
+                <select name="province" id="province" required>
+                    <option value="AB" <?= $clubMember['Province'] === 'AB' ? 'selected' : '' ?>>Alberta (AB)</option>
+                    <option value="NL" <?= $clubMember['Province'] === 'NL' ? 'selected' : '' ?>>Newfoundland and Labrador (NL)</option>
+                    <option value="NS" <?= $clubMember['Province'] === 'NS' ? 'selected' : '' ?>>Nova Scotia (NS)</option>
+                    <option value="PE" <?= $clubMember['Province'] === 'PE' ? 'selected' : '' ?>>Prince Edward Island (PE)</option>
+                    <option value="BC" <?= $clubMember['Province'] === 'BC' ? 'selected' : '' ?>>British Columbia (BC)</option>
+                    <option value="QC" <?= $clubMember['Province'] === 'QC' ? 'selected' : '' ?>>Quebec (QC)</option>
+                    <option value="ON" <?= $clubMember['Province'] === 'ON' ? 'selected' : '' ?>>Ontario (ON)</option>
+                    <option value="MB" <?= $clubMember['Province'] === 'MB' ? 'selected' : '' ?>>Manitoba (MB)</option>
+                    <option value="SK" <?= $clubMember['Province'] === 'SK' ? 'selected' : '' ?>>Saskatchewan (SK)</option>
+                    <option value="YT" <?= $clubMember['Province'] === 'YT' ? 'selected' : '' ?>>Yukon (YT)</option>
+                    <option value="NT" <?= $clubMember['Province'] === 'NT' ? 'selected' : '' ?>>Northwest Territories (NT)</option>
+                    <option value="NU" <?= $clubMember['Province'] === 'NU' ? 'selected' : '' ?>>Nunavut (NU)</option>
+                </select>
 
                 <label for="postal-code">Postal Code *:</label>
                 <input type="text" name="postal-code" id="postal-code" required

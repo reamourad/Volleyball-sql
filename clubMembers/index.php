@@ -11,6 +11,7 @@
             cm.Height,
             cm.Weight,
             p.PhoneNumber,
+            p.Email,
             p.DateOfBirth,
             p.Address,
             p.City,
@@ -90,6 +91,7 @@
                         <th>Height (cm)</th>
                         <th>Weight (kg)</th>
                         <th>Phone Number</th>
+                        <th>Email</th>
                         <th>Date of Birth</th>
                         <th>Address</th>
                         <th>City</th>
@@ -108,6 +110,7 @@
                             <td><?= htmlspecialchars($row['Height']) ?></td>
                             <td><?= htmlspecialchars($row['Weight']) ?></td>
                             <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
                             <td><?= htmlspecialchars($row['DateOfBirth']) ?></td>
                             <td><?= htmlspecialchars($row['Address']) ?></td>
                             <td><?= htmlspecialchars($row['City']) ?></td>

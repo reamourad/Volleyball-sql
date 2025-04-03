@@ -7,7 +7,7 @@
             p.PersonID,
             p.FirstName,
             p.LastName,
-            fm.Email,
+            p.Email,
             p.PhoneNumber,
             p.MedicareNumber,
             p.DateOfBirth,

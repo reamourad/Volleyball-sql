@@ -9,7 +9,7 @@
     $query = "
         SELECT 
             p.*,
-            fm.Email
+            fm.isPrimary
         FROM
             Person p
         JOIN 
@@ -30,6 +30,7 @@
     //Update the data that's been change
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         //Get values
+        $isPrimary = ($_POST['family-type'] === 'primary') ? 1 : 0;
         $firstName = mysqli_real_escape_string($conn, $_POST['first-name']);
         $lastName = mysqli_real_escape_string($conn, $_POST['last-name']);
         $email = mysqli_real_escape_string($conn, $_POST['email']);
@@ -53,6 +54,7 @@
                     LastName = ?,
                     MedicareNumber = ?,
                     DateOfBirth = ?,
+                    Email =  ?,
                     PhoneNumber = ?,
                     Address = ?,
                     City = ?,
@@ -62,7 +64,7 @@
                     PersonID = ?
             ";
             $stmt = mysqli_prepare($conn, $updatePersonQuery);
-            mysqli_stmt_bind_param($stmt, "ssssssssssi", $sin, $firstName, $lastName, $medicare, $dob, $phone, $address, $city, $province, $postalCode, $personID);
+            mysqli_stmt_bind_param($stmt, "sssssssssssi", $sin, $firstName, $lastName, $medicare, $dob, $email, $phone, $address, $city, $province, $postalCode, $personID);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to edit Person: " . mysqli_error($conn));
@@ -71,12 +73,12 @@
 
             $updateFamilyQuery = "
                 UPDATE FamilyMember SET
-                    Email = ?
+                    isPrimary  = ?
                 WHERE
                     PersonID = ?
             ";
             $stmt = mysqli_prepare($conn, $updateFamilyQuery);
-            mysqli_stmt_bind_param($stmt, "si", $email, $personID);
+            mysqli_stmt_bind_param($stmt, "ii", $isPrimary, $personID);
 
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to edit FamilyMember: " . mysqli_error($conn));
@@ -148,7 +150,14 @@
             <?php endif; ?>
 
             <form action="edit.php?id=<?= $familyMember['PersonID'] ?>" method="POST">
-            <label for="first-name">First Name *:</label>
+                <label for="family-type">Family Type *:</label>
+                <select name="family-type" id="family-type" required>
+                    <option value="primary" <?= $familyMember['isPrimary'] ? 'selected' : '' ?>>Primary</option>
+                    <option value="secondary" <?= !$familyMember['isPrimary'] ? 'selected' : '' ?>>Secondary</option>
+                </select>
+                <br>
+
+                <label for="first-name">First Name *:</label>
                 <input type="text" name="first-name" id="first-name" required
                     value="<?= htmlspecialchars($familyMember['FirstName']) ?>">
                 <br>
@@ -194,8 +203,20 @@
                 <br>
                 
                 <label for="province">Province *:</label>
-                <input type="text" name="province" id="province" required
-                    value="<?= htmlspecialchars($familyMember['Province']) ?>">
+                <select name="province" id="province" required>
+                    <option value="AB" <?= $familyMember['Province'] === 'AB' ? 'selected' : '' ?>>Alberta (AB)</option>
+                    <option value="NL" <?= $familyMember['Province'] === 'NL' ? 'selected' : '' ?>>Newfoundland and Labrador (NL)</option>
+                    <option value="NS" <?= $familyMember['Province'] === 'NS' ? 'selected' : '' ?>>Nova Scotia (NS)</option>
+                    <option value="PE" <?= $familyMember['Province'] === 'PE' ? 'selected' : '' ?>>Prince Edward Island (PE)</option>
+                    <option value="BC" <?= $familyMember['Province'] === 'BC' ? 'selected' : '' ?>>British Columbia (BC)</option>
+                    <option value="QC" <?= $familyMember['Province'] === 'QC' ? 'selected' : '' ?>>Quebec (QC)</option>
+                    <option value="ON" <?= $familyMember['Province'] === 'ON' ? 'selected' : '' ?>>Ontario (ON)</option>
+                    <option value="MB" <?= $familyMember['Province'] === 'MB' ? 'selected' : '' ?>>Manitoba (MB)</option>
+                    <option value="SK" <?= $familyMember['Province'] === 'SK' ? 'selected' : '' ?>>Saskatchewan (SK)</option>
+                    <option value="YT" <?= $familyMember['Province'] === 'YT' ? 'selected' : '' ?>>Yukon (YT)</option>
+                    <option value="NT" <?= $familyMember['Province'] === 'NT' ? 'selected' : '' ?>>Northwest Territories (NT)</option>
+                    <option value="NU" <?= $familyMember['Province'] === 'NU' ? 'selected' : '' ?>>Nunavut (NU)</option>
+                </select>
                 <br>
                 
                 <label for="postal-code">Postal Code *:</label>
