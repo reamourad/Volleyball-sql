@@ -1,11 +1,28 @@
 <?php
-    $page_title = "Family Members";
+    $page_title = "Team Formation";
+    require_once "../database.php";
 
-    function displayFamilyMember(){
-        require '../database.php';
-        $query = "";
-        //todo: Implement PHP code to display teams
-    }
+    $query = "
+        SELECT
+            t.TeamID,
+            t.TeamName,
+            t.Gender,
+            t.LocationID,
+            l.Name AS LocationName,
+            t.Captain AS CaptainID,
+            CONCAT(p.FirstName, ' ', p.LastName) AS CaptainName,
+            (SELECT COUNT(*) FROM Role r WHERE r.TeamID = t.TeamID) AS PlayerCount
+        FROM
+            Team t
+        LEFT JOIN Location l ON t.LocationID = l.LocationID
+        LEFT JOIN ClubMember cm ON t.Captain = cm.CMN
+        LEFT JOIN Person p ON cm.PersonID = p.PersonID
+        ORDER BY
+            t.TeamID
+    ";
+    
+    $result = mysqli_query($conn, $query);
+    $teams = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 
 <head>
@@ -26,8 +43,6 @@
             <li><a href="../locations/index.php">Locations</a></li>
             <li><a href="index.php">Team Formation</a></li>
             <li><a href="#">Events</a></li>
-
-
 
             <!-- Email Logs Dropdown -->
             <li class="dropdown">
@@ -59,29 +74,35 @@
             <table class="data-table">
                 <thead>
                     <tr>
+                        <th>Team ID</th>
                         <th>Team Name</th>
-                        <th>Coach</th>
-                        <th>Captain</th>
-                        <th>Location</th>
+                        <th>Gender</th>
+                        <th>Location ID</th>
+                        <th>Location Name</th>
+                        <th>Captain ID</th>
+                        <th>Captain Name</th>
                         <th># of Players</th>
                         <th>Actions</th>
                     </tr>
-                    </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Team 1</td>
-                        <td>Coach 1</td>
-                        <td>Captain 1</td>
-                        <td>Location 1</td>
-                        <td>10</td>
-                        <td><a href="show-details.php">Show Details</a></td>
-                    </tr>
-                    <!-- Displayed dynamically -->
-                    <!-- 
-                        //Todo: Implement PHP code to display teams
-                    -->
-                    
+                    <?php foreach ($teams as $team): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($team['TeamID']) ?></td>
+                            <td><?= htmlspecialchars($team['TeamName']) ?></td>
+                            <td><?= htmlspecialchars($team['Gender']) ?></td>
+                            <td><?= htmlspecialchars($team['LocationID']) ?></td>
+                            <td><?= htmlspecialchars($team['LocationName'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($team['CaptainID']) ?></td>
+                            <td><?= htmlspecialchars($team['CaptainName'] ?? 'N/A') ?></td>
+                            <td><?= htmlspecialchars($team['PlayerCount']) ?></td>
+                            <td>
+                                <a href="show-details.php?id=<?= $row['TeamID'] ?>">View</a>
+                                <a href="edit.php?id=<?= $team['TeamID'] ?>" class="edit-btn">Edit</a>
+                                <a href="delete.php?id=<?= $team['TeamID'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this team?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
