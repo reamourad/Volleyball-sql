@@ -97,7 +97,7 @@
                             <td><?= htmlspecialchars($team['CaptainName'] ?? 'N/A') ?></td>
                             <td><?= htmlspecialchars($team['PlayerCount']) ?></td>
                             <td>
-                                <a href="show-details.php?id=<?= $row['TeamID'] ?>">View</a>
+                                <a href="show-details.php?id=<?= $team['TeamID'] ?>">View</a>
                                 <a href="edit.php?id=<?= $team['TeamID'] ?>" class="edit-btn">Edit</a>
                                 <a href="delete.php?id=<?= $team['TeamID'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this team?')">Delete</a>
                             </td>
