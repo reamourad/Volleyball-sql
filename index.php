@@ -20,26 +20,22 @@
             <li><a href="locations/index.php">Locations</a></li>
             <li><a href="teamFormations/index.php">Team Formation</a></li>
             <li><a href="#">Events</a></li>
-
-
-
-            <!-- Email Logs Dropdown -->
-            <li class="dropdown">
-                <a href="#">Email Logs</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
-                </ul>
-            </li>
+            <li><a href="#">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
             <li class="dropdown">
-                <a href="#">Reports</a>
+                <a href="#">Queries</a>
                 <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
+                    <li><a href="#">Query 9</a></li>
+                    <li><a href="#">Query 10</a></li>
+                    <li><a href="#">Query 11</a></li>
+                    <li><a href="#">Query 12</a></li>
+                    <li><a href="#">Query 13</a></li>
+                    <li><a href="#">Query 14</a></li>
+                    <li><a href="#">Query 15</a></li>
+                    <li><a href="#">Query 16</a></li>
+                    <li><a href="#">Query 17</a></li>
+                    <li><a href="#">Query 18</a></li>
                 </ul>
             </li>
         </ul>
