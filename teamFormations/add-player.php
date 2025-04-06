@@ -36,6 +36,34 @@
                 throw new Exception("Error executing query: " . mysqli_error($conn));
             }
 
+            //Send email to the player for confirmation
+            $emailQuery = "
+                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+            ";
+
+            //Set the email parameters
+            $subject = "Welcome to the Team!";
+            $date = date("Y-m-d H:i:s");
+
+            //Write the body for the email
+            $teamQuery = "SELECT TeamName, LocationID FROM Team WHERE TeamID = ?";
+            $teamStmt = mysqli_prepare($conn, $teamQuery);
+            mysqli_stmt_bind_param($teamStmt, 'i', $teamID);
+            mysqli_stmt_execute($teamStmt);
+            $teamResult = mysqli_stmt_get_result($teamStmt);
+            $teamRow = mysqli_fetch_assoc($teamResult);
+            $teamName = $teamRow['TeamName'];
+            $locationID = $teamRow['LocationID'];
+
+            $first100Chars = "Welcome to the team! Go {$teamName}! You have been assigned the position of {$Position}.";
+
+            $emailStmt = mysqli_prepare($conn, $emailQuery);
+            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $CMN, $subject, $date, $first100Chars);
+
+            if(!mysqli_stmt_execute($emailStmt)) {
+                throw new Exception("Failed to send email: " . mysqli_error($conn));
+            }
+
             mysqli_commit($conn);
 
             // Redirect with success parameter
@@ -65,17 +93,7 @@
             <li><a href="../personnels/index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
             <li><a href="index.php">Team Formation</a></li>
-            <li><a href="#">Events</a></li>
-
-            <!-- Email Logs Dropdown -->
-            <li class="dropdown">
-                <a href="#">Email Logs</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
-                </ul>
-            </li>
+            <li class="dropdown"><a href="#">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
             <li class="dropdown">

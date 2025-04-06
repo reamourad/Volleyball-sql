@@ -42,17 +42,7 @@
             <li><a href="../personnels/index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
             <li><a href="index.php">Team Formation</a></li>
-            <li><a href="#">Events</a></li>
-
-            <!-- Email Logs Dropdown -->
-            <li class="dropdown">
-                <a href="#">Email Logs</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
-                </ul>
-            </li>
+            <li><a href="../emailLog/index.php">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
             <li class="dropdown">

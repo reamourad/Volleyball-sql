@@ -23,6 +23,33 @@
         exit;
     }
 
+    //Send email to the player
+    $emailQuery = "
+        INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+    ";
+
+    //Set the email parameters
+    $subject = "Removal from Team";
+    $date = date("Y-m-d H:i:s");
+
+    $teamQuery = "SELECT TeamName, LocationID FROM Team WHERE TeamID = ?";
+    $teamStmt = mysqli_prepare($conn, $teamQuery);
+    mysqli_stmt_bind_param($teamStmt, 'i', $teamID);
+    mysqli_stmt_execute($teamStmt);
+    $teamResult = mysqli_stmt_get_result($teamStmt);
+    $teamRow = mysqli_fetch_assoc($teamResult);
+    $teamName = $teamRow['TeamName'];
+    $locationID = $teamRow['LocationID'];
+
+    $first100Chars = "You have been removed from the {$teamName} Team. Good luck in your future endeavors.";
+
+    $emailStmt = mysqli_prepare($conn, $emailQuery);
+    mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $cmn, $subject, $date, $first100Chars);
+
+    if(!mysqli_stmt_execute($emailStmt)) {
+        throw new Exception("Failed to send email: " . mysqli_error($conn));
+    }
+
     //Delete the player from the team
     try{
         $deleteQuery = "DELETE FROM Role WHERE TeamID = ? AND CMN = ?";
