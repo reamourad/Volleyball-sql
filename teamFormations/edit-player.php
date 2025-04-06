@@ -56,6 +56,34 @@
                 throw new Exception("Error executing query: " . mysqli_error($conn));
             }
 
+            // Send email to the player for confirmation
+            $emailQuery = "
+                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+            ";
+
+            // Set the email parameters
+            $subject = "New Position Assigned!";
+            $date = date("Y-m-d H:i:s");
+
+            // Write the body for the email
+            $teamQuery = "SELECT TeamName, LocationID FROM Team WHERE TeamID = ?";
+            $teamStmt = mysqli_prepare($conn, $teamQuery);
+            mysqli_stmt_bind_param($teamStmt, 'i', $teamID);
+            mysqli_stmt_execute($teamStmt);
+            $teamResult = mysqli_stmt_get_result($teamStmt);
+            $teamRow = mysqli_fetch_assoc($teamResult);
+            $teamName = $teamRow['TeamName'];
+            $locationID = $teamRow['LocationID'];
+
+            $first100Chars = "Congratulations! You have been assigned the position of {$Position} in the {$teamName} team.";
+
+            $emailStmt = mysqli_prepare($conn, $emailQuery);
+            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $cmn, $subject, $date, $first100Chars);
+
+            if (!mysqli_stmt_execute($emailStmt)) {
+                throw new Exception("Failed to send email: " . mysqli_error($conn));
+            }
+
             mysqli_commit($conn);
 
             // Redirect with success parameter
