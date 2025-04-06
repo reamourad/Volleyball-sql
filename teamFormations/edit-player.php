@@ -18,9 +18,26 @@
     $result = mysqli_stmt_get_result($stmt);
     $role = mysqli_fetch_assoc($result);
 
+    //Extract player info
+    $query = "
+    SELECT 
+        p.FirstName,
+        p.LastName
+    FROM
+        ClubMember cm
+    JOIN
+        Person p ON cm.PersonID = p.PersonID
+    WHERE cm.CMN = ?
+    ";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, 'i', $cmn);
+    mysqli_stmt_execute($stmt);
+    $result2 = mysqli_stmt_get_result($stmt);
+    $player = mysqli_fetch_assoc($result2);
+
+
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         //Get values
-        $CMN = mysqli_real_escape_string($conn, $_POST['cmn']);
         $Position = mysqli_real_escape_string($conn, $_POST['Position']);
 
         mysqli_begin_transaction($conn);
@@ -28,13 +45,12 @@
         try {
             $updateQuery = "
                 UPDATE Role Set
-                    CMN = ?,
                     Position = ?
                 WHERE 
                     TeamID = ? AND CMN = ?
             ";
             $stmt = mysqli_prepare($conn, $updateQuery);
-            mysqli_stmt_bind_param($stmt, 'isii', $CMN, $Position, $_GET['id'], $_GET['cmn']);
+            mysqli_stmt_bind_param($stmt, 'sii', $Position, $_GET['id'], $_GET['cmn']);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Error executing query: " . mysqli_error($conn));
@@ -97,18 +113,16 @@
     <!-- Main Section -->
     <main>
         <div class="form-container">
-            <h1>Edit Team</h1>
+            <h1>Edit Player Position</h1>
 
             <!-- Confirming the update -->
             <?php if(isset($error)): ?>
                 <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <<form action="edit-player.php?id=<?= $teamID ?>&cmn=<?= $cmn ?>" method="POST">
-                <label for="cmn">Club Membership Number *:</label>
-                <input type="text" name="cmn" id="cmn" required
-                    value="<?=  htmlspecialchars($role['CMN']) ?>"
-                >
+            <form action="edit-player.php?id=<?= $teamID ?>&cmn=<?= $cmn ?>" method="POST">
+                <label>Player: <?=  htmlspecialchars($player['FirstName']) ?> <?=  htmlspecialchars($player['LastName']) ?></label>
+                <label>Club Membership Number: <?=  htmlspecialchars($role['CMN']) ?></label>
                 <br>
                 <label for="Position">Player Position *:</label>
                 <select name="Position" id="Position" required>

@@ -26,7 +26,8 @@
 
         try {
             $addQuery = "
-                INSERT INTO Role (CMN, TeamID, Position) VALUES (?, ?, ?);
+                INSERT INTO Role (CMN, TeamID, Position) 
+                VALUES (?, ?, ?);
             ";
             $stmt = mysqli_prepare($conn, $addQuery);
             mysqli_stmt_bind_param($stmt, 'sis', $CMN, $_GET['id'], $Position);
@@ -99,7 +100,7 @@
             <?php endif; ?>
 
             <form action="add-player.php?id=<?= $teamID ?>" method="POST">
-                <label for="CMN">Club Member Number *:</label>
+                <label for="CMN">Club Membership Number *:</label>
                 <input type="text" name="CMN" id="CMN" required
                     value="<?= isset($_POST['CMN']) ? htmlspecialchars($_POST['CMN']) : '' ?>"
                 >
