@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Edit Team";
+    $page_title = "Add Player";
     require_once '../database.php';
 
     //Get the team ID from the URL
@@ -19,25 +19,17 @@
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
         //Get values
-        $teamName = mysqli_real_escape_string($conn, $_POST['team-name']);
-        $gender = mysqli_real_escape_string($conn, $_POST['gender']);
-        $locationID = mysqli_real_escape_string($conn, $_POST['location-id']);
-        $captainID = mysqli_real_escape_string($conn, $_POST['captain-id']);
+        $CMN = mysqli_real_escape_string($conn, $_POST['CMN']);
+        $Position = mysqli_real_escape_string($conn, $_POST['position']);
 
         mysqli_begin_transaction($conn);
 
         try {
-            $updateQuery = "
-                UPDATE Team Set
-                    TeamName = ?,
-                    Gender = ?,
-                    LocationID = ?,
-                    Captain = ?
-                WHERE 
-                    TeamID = ?
+            $addQuery = "
+                INSERT INTO Role (CMN, TeamID, Position) VALUES (?, ?, ?);
             ";
-            $stmt = mysqli_prepare($conn, $updateQuery);
-            mysqli_stmt_bind_param($stmt, 'ssssi', $teamName, $gender, $locationID, $captainID, $_GET['id']);
+            $stmt = mysqli_prepare($conn, $addQuery);
+            mysqli_stmt_bind_param($stmt, 'sis', $CMN, $_GET['id'], $Position);
             
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Error executing query: " . mysqli_error($conn));
@@ -46,7 +38,7 @@
             mysqli_commit($conn);
 
             // Redirect with success parameter
-            header("Location: index.php?success=1");
+            header("Location: show-details.php?id=$teamID&success=1");
             exit;
             
         } catch (Exception $e) {
@@ -99,37 +91,32 @@
     <!-- Main Section -->
     <main>
         <div class="form-container">
-            <h1>Edit Team</h1>
+            <h1>Add Player</h1>
 
             <!-- Confirming the addition -->
             <?php if(isset($error)): ?>
                 <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <form action="edit.php?id=<?= $team['TeamID'] ?>" method="POST">
-                <label for="team-name">Team Name *:</label>
-                <input type="text" name="team-name" id="team-name" required
-                    value="<?=  htmlspecialchars($team['TeamName']) ?>"
+            <form action="add-player.php?id=<?= $teamID ?>" method="POST">
+                <label for="CMN">Club Member Number *:</label>
+                <input type="text" name="CMN" id="CMN" required
+                    value="<?= isset($_POST['CMN']) ? htmlspecialchars($_POST['CMN']) : '' ?>"
                 >
                 <br>
-                <label for="gender">Gender (M/F) *:</label>
-                <select name="gender" id="gender" required>
-                    <option value="M" <?= $team['Gender'] === 'M' ? 'selected' : '' ?>>Male</option>
-                    <option value="F" <?= $team['Gender'] === 'F' ? 'selected' : '' ?>>Female</option>
-                </select>
-                <br>
-                <label for="location-id">Location ID *:</label>
-                <input type="text" name="location-id" id="location-id" required
-                    value="<?=  htmlspecialchars($team['LocationID']) ?>"
-                >
-                <br>
-                <label for="captain-id">Captain ID *:</label>
-                <input type="text" name="captain-id" id="captain-id" required
-                    value="<?= htmlspecialchars($team['Captain']) ?>"
-                >
+                <label for="position">Player Position *:</label>
+                    <select name="position" id="position" required>
+                        <option value="Outside Hitter">Outside Hitter</option>
+                        <option value="Opposite">Opposite</option>
+                        <option value="Setter">Setter</option>
+                        <option value="Middle Blocker">Middle Blocker</option>
+                        <option value="Libero">Libero</option>
+                        <option value="Defensive Specialist">Defensive Specialist</option>
+                        <option value="Serving Specialist">Serving Specialist</option>
+                    </select>
                 <br>
                 <p>* This indicates that the field must be filled</p>
-                <button type="submit">Edit Team</button>
+                <button type="submit"> Add Player</button>
             </form>
         </div>
     </main>

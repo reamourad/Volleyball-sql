@@ -116,7 +116,7 @@
     <main>
         <div class="list-container">
             <h2>Team <?= htmlspecialchars($teamName ?: 'Team Not Found') ?> from <?= htmlspecialchars($locationName ?: 'Team Not Found') ?></h2>
-            <button class="add-btn" onclick="window.location.href='add.php'">Add Player</button>
+            <button class="add-btn" onclick="window.location.href='add-player.php?id=<?= $_GET['id'] ?>'">Add Player</button>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -146,8 +146,8 @@
                             <td><?= htmlspecialchars($player['PhoneNumber']) ?></td>
                             <td><?= htmlspecialchars($player['Email']) ?></td>
                             <td>
-                                <a href="edit.php?id=<?= $team['TeamID'] ?>" class="edit-btn">Edit</a>
-                                <a href="delete.php?id=<?= $team['TeamID'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this team?')">Delete</a>
+                                <a href="edit-player.php?id=<?= $teamID?>&cmn=<?=$player['CMN'] ?>" class="edit-btn">Edit</a> 
+                                <a href="remove-player.php?id=<?= $teamID ?>&cmn=<?=$player['CMN']?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this player?')">Delete</a>
                             </td>
                         </tr>
                     <?php endforeach; ?>
