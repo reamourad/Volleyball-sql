@@ -19,6 +19,7 @@
             AND ClubMember.CMN = Payment.CMN 
             -- club member are still active 
             AND Payment.MembershipEndDate  >= CURDATE()
+            AND FLOOR(DATEDIFF(CURDATE(), Person.DateOfBirth)/365) <= 18
             -- they're in a session as an outside hitter 
             AND EXISTS (
                 SELECT 1 
@@ -92,7 +93,7 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>List of Desactivated</h2>
+            <h2>Query 13: List of Active Club Members Exclusively Assigned as Outside Hitters in All Formation</h2>
             <table class="data-table">
                 <thead>
                     <th>CMN</th>
