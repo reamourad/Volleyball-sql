@@ -3,7 +3,44 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+            ClubMember.CMN, 
+            Person.FirstName, 
+            Person.LastName, 
+            FLOOR(DATEDIFF(CURDATE(), Person.DateOfBirth)/365) AS age, 
+            Person.PhoneNumber, 
+            Person.Email,
+            Location.name AS location_name
+        FROM Person, ClubMember, Location, Payment
+        WHERE 
+            -- joins 
+            Person.PersonID = ClubMember.PersonID 
+            AND Location.LocationID = ClubMember.LocationID 
+            AND ClubMember.CMN = Payment.CMN 
+            -- club member are still active 
+            AND Payment.MembershipEndDate  >= CURDATE()
+            -- they're in a session as an outside hitter 
+            AND EXISTS (
+                SELECT 1 
+                FROM Role r1
+                JOIN Session ON r1.TeamID = Session.Team1ID OR r1.TeamID = Session.Team2ID
+                WHERE r1.CMN = ClubMember.CMN 
+                AND r1.Position = 'Outside Hitter'
+            )
+            -- they should never be assigned any other role in any session
+            AND NOT EXISTS (
+                SELECT 1 
+                FROM Role r2
+                JOIN Session ON r2.TeamID = Session.Team1ID OR r2.TeamID = Session.Team2ID
+                WHERE r2.CMN = ClubMember.CMN 
+                AND r2.Position != 'Outside Hitter'
+            )
+            
+        GROUP BY ClubMember.CMN
+        ORDER BY 
+            location_name ASC, 
+            ClubMember.CMN ASC
+    
     ";
 
     // Execute the query
@@ -55,23 +92,27 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 13</h2>
+            <h2>List of Desactivated</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <th>CMN</th>
+                    <th>First Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>Phone #</th>
+                    <th>Email</th>
+                    <th>Location Name</th>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['CMN']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['age']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['location_name']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
