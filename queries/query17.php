@@ -3,7 +3,15 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+            p.FirstName, 
+            p.LastName, 
+            c.StartDate, 
+            c.EndDate
+        FROM Person p
+        JOIN Contract c ON p.PersonID = c.EmployeeID
+        WHERE c.Role = 'Treasurer'
+        ORDER BY p.FirstName, p.LastName, c.StartDate;
     ";
 
     // Execute the query
@@ -55,14 +63,15 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 17</h2>
+            <h2>Query 17: List of Club Treasurers</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Contract Start Date</th>
+                        <th>Contract End Date</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
@@ -72,6 +81,10 @@
                                 example:
                                 <td><?= htmlspecialchars($row['Attribute1']) ?></td>
                             -->
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['StartDate']) ?></td>
+                            <td><?= htmlspecialchars($row['EndDate']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
