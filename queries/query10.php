@@ -70,7 +70,7 @@ ORDER BY CM.CMN ASC;
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 10</h2>
+            <h2>Query 10: Active Member Associated w/ Minimum 3 Location</h2>
             <table class="data-table">
                 <thead>
                     <tr>
