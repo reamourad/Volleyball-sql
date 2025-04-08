@@ -3,21 +3,21 @@
     require_once '../database.php';
 
     $query = "
-    SELECT 
-    CM.CMN AS ClubMembershipNumber,
-    P.FirstName,
-    P.LastName
-FROM ClubMember CM
-JOIN Person P ON CM.PersonID = P.PersonID
-JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
-WHERE CM.CMN IN (
-    SELECT CMN
-    FROM RegisteredAt
-    GROUP BY CMN
-    HAVING COUNT(DISTINCT LocationID) >= 3
-)
-AND TIMESTAMPDIFF(YEAR, RA.DateRegistered, CURDATE()) <= 3
-ORDER BY CM.CMN ASC;
+    SELECT DISTINCT
+        CM.CMN AS ClubMembershipNumber,
+        P.FirstName,
+        P.LastName
+    FROM ClubMember CM
+    JOIN Person P ON CM.PersonID = P.PersonID
+    JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
+    WHERE CM.CMN IN (
+        SELECT CMN
+        FROM RegisteredAt
+        GROUP BY CMN
+        HAVING COUNT(DISTINCT LocationID) >= 3
+    )
+    AND TIMESTAMPDIFF(YEAR, RA.DateRegistered, CURDATE()) <= 3
+    ORDER BY CM.CMN ASC;
 
 ";
 
@@ -70,7 +70,7 @@ ORDER BY CM.CMN ASC;
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 10: Active Member Associated w/ Minimum 3 Location</h2>
+            <h2>Query 10 : List of Active Club Members with 3 or More Locations Registered in the Last 3 Years</h2>
             <table class="data-table">
                 <thead>
                     <tr>
