@@ -90,7 +90,6 @@
                             <td><?= htmlspecialchars($row['Capacity']) ?></td>
 
                             <td class="action-links">
-                                <a href="show-mandates.php?id=<?= $row['LocationID'] ?>">View</a>
                                 <a href="edit.php?id=<?= $row['LocationID'] ?>">Edit</a>
                                 <a href="delete.php?id=<?= $row['LocationID'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>

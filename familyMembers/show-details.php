@@ -1,3 +1,94 @@
+<?php
+    $page_title = "Query 8";
+    require_once '../database.php';
+
+    
+    $Q8Id = isset($_GET['id']) ? $_GET['id'] : 0;
+
+    //Fetch the location details
+    $locationQuery = "
+        SELECT
+            l.Name AS LocationName,
+            l.Address,
+            l.City,
+            l.Province,
+            l.PostalCode
+        FROM FamilyMember AS fm
+        JOIN RegisteredAt as ra
+            ON fm.PersonID = ra.FamilyID
+        JOIN Location AS l
+            ON ra.LocationID = l.LocationID
+        WHERE fm.PersonID = $Q8Id
+    ";
+    $locationResult = mysqli_query($conn, $locationQuery);
+    if (!$locationResult) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    //Fetch the secondary family member details
+    $secondaryQuery = "
+        SELECT
+            secondary_person.FirstName AS SecondaryFirstName,
+            secondary_person.LastName AS SecondaryLastName,
+            secondary_person.PhoneNumber AS SecondaryPhoneNumber
+        FROM FamilyMember AS fm
+        LEFT JOIN FamilyMember AS secondary_fm
+            ON fm.AlternativeFamilyID = secondary_fm.PersonID
+		LEFT JOIN Person AS secondary_person
+			ON secondary_fm.PersonID = secondary_person.PersonID
+        WHERE fm.PersonID = $Q8Id
+    ";
+
+    $secondaryResult = mysqli_query($conn, $secondaryQuery);
+    if (!$secondaryResult) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    //Fetch the club members details
+    $membersQuery = "
+        SELECT
+            cm.CMN AS ClubMembershipNumber,
+            person.FirstName AS ClubMemberFirstName,
+            person.LastName AS ClubMemberLastName,
+            person.DateOfBirth,
+            person.SSN,
+            person.MedicareNumber,
+            person.PhoneNumber AS ClubMemberPhoneNumber,
+            person.Address,
+            person.City,
+            person.Province,
+            person.PostalCode,
+            cm.Relationship AS RelationshipToSecondaryFamilyMember
+        FROM FamilyMember AS fm
+        JOIN ClubMember AS cm
+            ON cm.PrimaryFamilyID = fm.PersonID
+        JOIN Person AS person
+            ON cm.PersonID = person.PersonID
+        WHERE 
+            fm.PersonID = $Q8Id
+    ";
+    $memberResult = mysqli_query($conn, $membersQuery);
+    if (!$memberResult) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+    $queryName = "
+        Select CONCAT(Person.FirstName, ' ', Person.LastName) AS MainName
+        From Person
+        Where Person.PersonID = $Q8Id
+    ";
+        
+    $resultName = mysqli_query($conn, $queryName);
+
+    if (!$resultName) {
+        die("Query failed: " . mysqli_error($conn));
+    }
+
+
+    $rowName = mysqli_fetch_assoc($resultName);
+    $mainName = $rowName['MainName'];
+?>
+    
 <head>
     <title><?= $page_title ?></title>
     <link rel="stylesheet" type="text/css" href="../css/navbar.css">
@@ -39,7 +130,7 @@
 
     <!-- Main Section -->
     <main>
-        <h1 style="margin: 2rem 1rem;">More Detail On "Person Name"</h1>
+    <h1 style="margin: 2rem 1rem;">More Detail On <?= htmlspecialchars($mainName) ?></h1>
 
         <!-- Location Details -->
         <div class="list-container">
@@ -52,14 +143,22 @@
                         <th>City</th>
                         <th>Province</th>
                         <th>Postal Code</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Displayed dynamically -->
+                    <?php while ($row = mysqli_fetch_assoc($locationResult)): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['LocationName']) ?></td>
+                            <td><?= htmlspecialchars($row['Address']) ?></td>
+                            <td><?= htmlspecialchars($row['City']) ?></td>
+                            <td><?= htmlspecialchars($row['Province']) ?></td>
+                            <td><?= htmlspecialchars($row['PostalCode']) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
+
 
         <!-- Secondary Family Member Details -->
         <div class="list-container">
@@ -70,11 +169,16 @@
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Phone Number</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <!-- Displayed dynamically -->
+                    <?php while ($row = mysqli_fetch_assoc($secondaryResult)): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['SecondaryFirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['SecondaryLastName']) ?></td>
+                            <td><?= htmlspecialchars($row['SecondaryPhoneNumber']) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>
@@ -97,11 +201,25 @@
                         <th>Province</th>
                         <th>Postal Code</th>
                         <th>Relationship</th>
-                        <th>Actions</th>
                     </tr>
                 </thead>
-                <tbody>
-                    <!-- Displayed dynamically -->
+                    <tbody>
+                    <?php while ($row = mysqli_fetch_assoc($memberResult)): ?>
+                        <tr>
+                            <td><?= htmlspecialchars($row['ClubMembershipNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['ClubMemberFirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['ClubMemberLastName']) ?></td>
+                            <td><?= htmlspecialchars($row['DateOfBirth']) ?></td>
+                            <td><?= htmlspecialchars($row['SSN']) ?></td>
+                            <td><?= htmlspecialchars($row['MedicareNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['ClubMemberPhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Address']) ?></td>
+                            <td><?= htmlspecialchars($row['City']) ?></td>
+                            <td><?= htmlspecialchars($row['Province']) ?></td>
+                            <td><?= htmlspecialchars($row['PostalCode']) ?></td>
+                            <td><?= htmlspecialchars($row['RelationshipToSecondaryFamilyMember']) ?></td>
+                        </tr>
+                    <?php endwhile; ?>
                 </tbody>
             </table>
         </div>

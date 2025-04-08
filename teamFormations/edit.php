@@ -117,26 +117,23 @@
             <li><a href="../familyMembers/index.php">Family Members</a></li>
             <li><a href="../personnels/index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
-            <li><a href="index.php">Team Formation</a></li>
-            <li><a href="#">Events</a></li>
-
-            <!-- Email Logs Dropdown -->
-            <li class="dropdown">
-                <a href="#">Email Logs</a>
-                <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
-                </ul>
-            </li>
+            <li><a href="../teamFormations/index.php">Team Formation</a></li>
+            <li><a href="../emailLog/index.php">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
             <li class="dropdown">
-                <a href="#">Reports</a>
+                <a href="#">Queries</a>
                 <ul class="dropdown-content">
-                    <li><a href="#">Subcategory 1</a></li>
-                    <li><a href="#">Subcategory 2</a></li>
-                    <li><a href="#">Subcategory 3</a></li>
+                    <li><a href="../queries/query9.php">Query 9</a></li>
+                    <li><a href="../queries/query10.php">Query 10</a></li>
+                    <li><a href="../queries/query11.php">Query 11</a></li>
+                    <li><a href="../queries/query12.php">Query 12</a></li>
+                    <li><a href="../queries/query13.php">Query 13</a></li>
+                    <li><a href="../queries/query14.php">Query 14</a></li>
+                    <li><a href="../queries/query15.php">Query 15</a></li>
+                    <li><a href="../queries/query16.php">Query 16</a></li>
+                    <li><a href="../queries/query17.php">Query 17</a></li>
+                    <li><a href="../queries/query18.php">Query 18</a></li>
                 </ul>
             </li>
         </ul>
