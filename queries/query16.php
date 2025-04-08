@@ -4,45 +4,46 @@
 
     $query = "
         SELECT
-            cm.CMN,
-            p.FirstName,
-            p.LastName,
-            FLOOR(DATEDIFF(CURDATE(), p.DateOfBirth)/365) AS age, 
-            p.PhoneNumber,
-            p.Email,
-            l.Name AS LocationName
-        FROM 
-            ClubMember cm
-            JOIN Person p ON cm.PersonID = p.PersonID
-            JOIN Location l ON cm.LocationID = l.LocationID
-            JOIN Payment pay ON cm.CMN = pay.CMN
-        WHERE 
-            -- Member is active
-            pay.MembershipEndDate >= CURDATE()
-            
-            --  has been assigned to at least one formation game session
-            AND EXISTS (
-                SELECT 1
-                FROM Role r
-                JOIN Team t ON r.TeamID = t.TeamID
-                JOIN Session s ON (s.Team1ID = t.TeamID OR s.Team2ID = t.TeamID)
-                WHERE r.CMN = cm.CMN
-                AND s.Type = 'Formation'
-            )
-            
-            -- has never lost a game they played in
-            AND NOT EXISTS (
-                SELECT 1
-                FROM Role r
-                JOIN Team t ON r.TeamID = t.TeamID
-                JOIN Session s ON (s.Team1ID = t.TeamID OR s.Team2ID = t.TeamID)
-                WHERE r.CMN = cm.CMN
-                AND (
-                    (t.TeamID = s.Team1ID AND s.Score1 < s.Score2 AND s.Score1 IS NOT NULL AND s.Score2 IS NOT NULL) 
-                    OR
-                    (t.TeamID = s.Team2ID AND s.Score2 < s.Score1 AND s.Score1 IS NOT NULL AND s.Score2 IS NOT NULL)
-                )
-            )
+    cm.CMN,
+    p.FirstName,
+    p.LastName,
+    FLOOR(DATEDIFF(CURDATE(), p.DateOfBirth)/365) AS age, 
+    p.PhoneNumber,
+    p.Email,
+    l.Name AS LocationName
+FROM 
+    ClubMember cm
+    JOIN Person p ON cm.PersonID = p.PersonID
+    JOIN Location l ON cm.LocationID = l.LocationID
+    JOIN Payment pay ON cm.CMN = pay.CMN
+WHERE 
+    -- Member is active
+    pay.MembershipEndDate >= CURDATE()
+
+    --  has been assigned to at least one formation game session
+    AND EXISTS (
+        SELECT 1
+        FROM Role r
+        JOIN Team t ON r.TeamID = t.TeamID
+        JOIN Session s ON (s.Team1ID = t.TeamID OR s.Team2ID = t.TeamID)
+        WHERE r.CMN = cm.CMN
+    )
+
+    -- has never lost a game they played in
+    AND NOT EXISTS (
+        SELECT 1
+        FROM Role r
+        JOIN Team t ON r.TeamID = t.TeamID
+        JOIN Session s ON (s.Team1ID = t.TeamID OR s.Team2ID = t.TeamID)
+        WHERE r.CMN = cm.CMN
+        AND (
+            (t.TeamID = s.Team1ID AND s.Score1 < s.Score2 AND s.Score1 IS NOT NULL AND s.Score2 IS NOT NULL) 
+            OR
+            (t.TeamID = s.Team2ID AND s.Score2 < s.Score1 AND s.Score1 IS NOT NULL AND s.Score2 IS NOT NULL)
+        )
+        AND s.Type = 'Game'
+        )
+        GROUP BY cm.CMN
         ORDER BY 
             l.Name ASC, 
             cm.CMN ASC;
