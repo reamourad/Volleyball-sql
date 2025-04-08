@@ -3,7 +3,29 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+    Person.FirstName AS HeadCoachFirstName,
+    Person.LastName AS HeadCoachLastName,
+    S.StartDateTime AS SessionStartTime,
+    S.Address AS SessionAddress,
+    S.Type AS SessionType,
+    T.TeamName AS TeamName,
+    S.Score1 AS Team1Score,
+    S.Score2 AS Team2Score,
+    Player.FirstName AS PlayerFirstName,
+    Player.LastName AS PlayerLastName,
+    R.Position AS PlayerRole
+FROM Session S
+JOIN Personnel P ON S.HeadCoachID = P.EmployeeID
+JOIN Person ON P.EmployeeID = Person.PersonID 
+JOIN Team T ON T.TeamID = S.Team1ID OR T.TeamID = S.Team2ID
+JOIN Role R ON R.TeamID = T.TeamID
+JOIN ClubMember CM ON CM.CMN = R.CMN
+JOIN Person Player ON Player.PersonID = CM.PersonID
+JOIN Location L ON L.LocationID = T.LocationID
+WHERE L.Name = 'Montreal Central' 
+  AND S.StartDateTime BETWEEN '2025-04-07' AND '2025-04-13' 
+ORDER BY DATE(S.StartDateTime) ASC, TIME(S.StartDateTime) ASC;
     ";
 
     // Execute the query
@@ -58,20 +80,34 @@
             <h2>Query 9</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>Head Coach First Name</th>
+                        <th>Head Coach Last Name</th>
+                        <th>Session Start Time</th>
+                        <th>Session Address</th>
+                        <th>Session Type</th>
+                        <th>Team Name</th>
+                        <th>Team 1 Score</th>
+                        <th>Team 2 Score</th>
+                        <th>Player First Name</th>
+                        <th>Player Last Name</th>
+                        <th>Player Role</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['HeadCoachFirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['HeadCoachLastName']) ?></td>
+                            <td><?= htmlspecialchars($row['SessionStartTime']) ?></td>
+                            <td><?= htmlspecialchars($row['SessionAddress']) ?></td>
+                            <td><?= htmlspecialchars($row['SessionType']) ?></td>
+                            <td><?= htmlspecialchars($row['TeamName']) ?></td>
+                            <td><?= htmlspecialchars($row['Team1Score']) ?></td>
+                            <td><?= htmlspecialchars($row['Team2Score']) ?></td>
+                            <td><?= htmlspecialchars($row['PlayerFirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['PlayerLastName']) ?></td>
+                            <td><?= htmlspecialchars($row['PlayerRole']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
