@@ -4,23 +4,24 @@
 
     $query = "
         SELECT 
-    CM.CMN AS MembershipNumber,
-    P.FirstName,
-    P.LastName,
-    TIMESTAMPDIFF(YEAR, P.DateOfBirth, CURDATE()) AS Age,
-    RA.DateRegistered AS DateOfJoining,
-    P.PhoneNumber,
-    P.Email,
-    L.Name AS CurrentLocationName
-FROM ClubMember CM
-JOIN Person P ON CM.PersonID = P.PersonID
-JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
-JOIN Location L ON CM.LocationID = L.LocationID
-WHERE CM.CMN NOT IN (
-    SELECT DISTINCT R.CMN
-    FROM Role R
-)
-ORDER BY L.Name ASC, CM.CMN ASC;
+            CM.CMN AS MembershipNumber,
+            P.FirstName,
+            P.LastName,
+            TIMESTAMPDIFF(YEAR, P.DateOfBirth, CURDATE()) AS Age,
+            MIN(RA.DateRegistered) AS DateOfJoining,
+            P.PhoneNumber,
+            P.Email,
+            L.Name AS CurrentLocationName
+        FROM ClubMember CM
+        JOIN Person P ON CM.PersonID = P.PersonID
+        JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
+        JOIN Location L ON CM.LocationID = L.LocationID
+        WHERE CM.CMN NOT IN (
+            SELECT DISTINCT R.CMN
+            FROM Role R
+        )
+        GROUP BY CM.CMN, P.FirstName, P.LastName, P.DateOfBirth, P.PhoneNumber, P.Email, L.Name
+        ORDER BY L.Name ASC, CM.CMN ASC;
     ";
 
     // Execute the query
