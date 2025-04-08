@@ -73,7 +73,7 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 12</h2>
+            <h2>Query 12: List of Active Club Members Never Assigned to Any Formation Team Session</h2>
             <table class="data-table">
                 <thead>
                     <tr>
