@@ -14,6 +14,10 @@
         $website = mysqli_real_escape_string($conn, $_POST['website']);
         $capacity = mysqli_real_escape_string($conn, $_POST['capacity']);
 
+        $headManager = mysqli_real_escape_string($conn, $_POST['head-manager']);
+        $startDate = date('Y-m-d'); 
+        $role = 'General Manager'; 
+
         mysqli_begin_transaction($conn);
 
         try {
@@ -27,6 +31,19 @@
         
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to add Location: " . mysqli_error($conn));
+            }
+
+            //Make the contract for Head Manager
+            $contractQuery = "
+                INSERT INTO Contract (EmployeeID, LocationID, StartDate, EndDate, Role) 
+                VALUES (?, LAST_INSERT_ID(), ?, NULL, ?)
+            ";
+
+            $stmtContract = mysqli_prepare($conn, $contractQuery);
+            mysqli_stmt_bind_param($stmtContract, 'iss', $headManager, $startDate, $role);
+
+            if (!mysqli_stmt_execute($stmtContract)) {
+                throw new Exception("Failed to create contract for Head Manager: " . mysqli_error($conn));
             }
 
             mysqli_commit($conn);
@@ -95,6 +112,10 @@
                     <option value="Head" <?= isset($_POST['type']) && $_POST['type'] === 'Head' ? 'selected' : '' ?>>Head</option>
                     <option value="Branch" <?= isset($_POST['type']) && $_POST['type'] === 'Branch' ? 'selected' : '' ?>>Branch</option>
                 </select>
+                <br>
+                <label for="head-manager">Head Manager ID *:</label>
+                <input type="number" name="head-manager" id="head-manager" required
+                    value="<?= isset($_POST['head-manager']) ? htmlspecialchars($_POST['head-manager']) : '' ?>">
                 <br>
                 <label for="name">Name *:</label>
                 <input type="text" name="name" id="name" required

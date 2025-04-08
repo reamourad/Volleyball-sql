@@ -3,8 +3,15 @@
     require_once '../database.php';
 
     $query = "
-        SELECT *
-        FROM Location
+        SELECT 
+            l.*,
+            CONCAT(p.FirstName, ' ', p.LastName) AS FullName
+        FROM 
+            Location l
+        LEFT JOIN 
+            Contract c ON l.LocationID = c.LocationID AND c.Role = 'General Manager'
+        LEFT JOIN
+            Person p ON p.PersonID = c.EmployeeID
         ORDER BY LocationID
     ";
 
@@ -64,6 +71,7 @@
                     <tr>
                         <th>Location ID</th>
                         <th>Type</th>
+                        <th>Head Manager</th>
                         <th>Name</th>
                         <th>Address</th>
                         <th>City</th>
@@ -80,6 +88,7 @@
                         <tr>
                             <td><?= htmlspecialchars($row['LocationID']) ?></td>
                             <td><?= htmlspecialchars($row['Type']) ?></td>
+                            <td><?= !empty($row['FullName']) ? htmlspecialchars($row['FullName']) : '' ?></td>
                             <td><?= htmlspecialchars($row['Name']) ?></td>
                             <td><?= htmlspecialchars($row['Address']) ?></td>
                             <td><?= htmlspecialchars($row['City']) ?></td>
