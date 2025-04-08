@@ -15,8 +15,7 @@
         FROM
             Team t
         LEFT JOIN Location l ON t.LocationID = l.LocationID
-        LEFT JOIN ClubMember cm ON t.Captain = cm.CMN
-        LEFT JOIN Person p ON cm.PersonID = p.PersonID
+        LEFT JOIN Person p ON t.Captain = p.PersonID
         ORDER BY
             t.TeamID
     ";
