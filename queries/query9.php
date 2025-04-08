@@ -4,28 +4,28 @@
 
     $query = "
         SELECT 
-    Person.FirstName AS HeadCoachFirstName,
-    Person.LastName AS HeadCoachLastName,
-    S.StartDateTime AS SessionStartTime,
-    S.Address AS SessionAddress,
-    S.Type AS SessionType,
-    T.TeamName AS TeamName,
-    S.Score1 AS Team1Score,
-    S.Score2 AS Team2Score,
-    Player.FirstName AS PlayerFirstName,
-    Player.LastName AS PlayerLastName,
-    R.Position AS PlayerRole
-FROM Session S
-JOIN Personnel P ON S.HeadCoachID = P.EmployeeID
-JOIN Person ON P.EmployeeID = Person.PersonID 
-JOIN Team T ON T.TeamID = S.Team1ID OR T.TeamID = S.Team2ID
-JOIN Role R ON R.TeamID = T.TeamID
-JOIN ClubMember CM ON CM.CMN = R.CMN
-JOIN Person Player ON Player.PersonID = CM.PersonID
-JOIN Location L ON L.LocationID = T.LocationID
-WHERE L.Name = 'Montreal Central' 
-  AND S.StartDateTime BETWEEN '2025-04-07' AND '2025-04-13' 
-ORDER BY DATE(S.StartDateTime) ASC, TIME(S.StartDateTime) ASC;
+            Person.FirstName AS HeadCoachFirstName,
+            Person.LastName AS HeadCoachLastName,
+            S.StartDateTime AS SessionStartTime,
+            S.Address AS SessionAddress,
+            S.Type AS SessionType,
+            T.TeamName AS TeamName,
+            S.Score1 AS Team1Score,
+            S.Score2 AS Team2Score,
+            Player.FirstName AS PlayerFirstName,
+            Player.LastName AS PlayerLastName,
+            R.Position AS PlayerRole
+        FROM Session S
+        JOIN Personnel P ON S.HeadCoachID = P.EmployeeID
+        JOIN Person ON P.EmployeeID = Person.PersonID 
+        JOIN Team T ON T.TeamID = S.Team1ID OR T.TeamID = S.Team2ID
+        JOIN Role R ON R.TeamID = T.TeamID
+        JOIN ClubMember CM ON CM.CMN = R.CMN
+        JOIN Person Player ON Player.PersonID = CM.PersonID
+        JOIN Location L ON L.LocationID = T.LocationID
+        WHERE L.Name = 'Montreal Central' 
+        AND S.StartDateTime BETWEEN '2025-04-07' AND '2025-04-13' 
+        ORDER BY DATE(S.StartDateTime) ASC, TIME(S.StartDateTime) ASC;
     ";
 
     // Execute the query
