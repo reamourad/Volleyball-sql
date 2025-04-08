@@ -12,7 +12,7 @@
             Contract c ON l.LocationID = c.LocationID AND c.Role = 'General Manager'
         LEFT JOIN
             Person p ON p.PersonID = c.EmployeeID
-        ORDER BY LocationID
+        ORDER BY Province ASC, City ASC
     ";
 
     // Execute the query
