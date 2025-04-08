@@ -203,7 +203,6 @@
         <!-- Club Members Details -->
         <div class="list-container">
             <h2>Club Members</h2>
-            <button class="add-club-member-btn add-btn" onclick="window.location.href='add-club-member.php'">Add Club Member</button>
             <table class="data-table">
                 <thead>
                     <tr>
