@@ -5,6 +5,7 @@
     $query = "
         SELECT 
             p.PersonID,
+            cm.CMN,
             p.FirstName,
             p.LastName,
             cm.Gender,
@@ -98,7 +99,7 @@
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['PersonID']) ?></td>
+                            <td><?= htmlspecialchars($row['CMN']) ?></td>
                             <td><?= htmlspecialchars($row['FirstName']) ?></td>
                             <td><?= htmlspecialchars($row['LastName']) ?></td>
                             <td><?= htmlspecialchars($row['Gender']) ?></td>
