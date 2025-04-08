@@ -5,6 +5,7 @@
     $query = "
         SELECT 
             p.PersonID,
+            fm.isPrimary,
             p.FirstName,
             p.LastName,
             p.Email,
@@ -78,6 +79,7 @@
                 <thead>
                     <tr>
                         <th>Family Member ID</th>
+                        <th>Type</th>
                         <th>First Name</th>
                         <th>Last Name</th>
                         <th>Email</th>
@@ -95,6 +97,7 @@
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
                             <td><?= htmlspecialchars($row['PersonID']) ?></td>
+                            <td><?= $row['isPrimary'] ? 'Primary' : 'Secondary' ?></td>
                             <td><?= htmlspecialchars($row['FirstName']) ?></td>
                             <td><?= htmlspecialchars($row['LastName']) ?></td>
                             <td><?= htmlspecialchars($row['Email']) ?></td>
