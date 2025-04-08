@@ -77,7 +77,7 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 9</h2>
+            <h2>Query 9: Session Details for April 10th, 2025</h2>
             <table class="data-table">
                 <thead>
                     <tr>
