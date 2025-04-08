@@ -3,8 +3,23 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
-    ";
+    SELECT 
+    CM.CMN AS ClubMembershipNumber,
+    P.FirstName,
+    P.LastName
+FROM ClubMember CM
+JOIN Person P ON CM.PersonID = P.PersonID
+JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
+WHERE CM.CMN IN (
+    SELECT CMN
+    FROM RegisteredAt
+    GROUP BY CMN
+    HAVING COUNT(DISTINCT LocationID) >= 3
+)
+AND TIMESTAMPDIFF(YEAR, RA.DateRegistered, CURDATE()) <= 3
+ORDER BY CM.CMN ASC;
+
+";
 
     // Execute the query
     $result = mysqli_query($conn, $query);
@@ -58,20 +73,19 @@
             <h2>Query 10</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>Club Membership Number</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                    </tr>
+                
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_assoc($result)): ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)) : ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['ClubMembershipNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

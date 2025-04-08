@@ -3,7 +3,22 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+    L.Name AS LocationName,
+    COUNT(CASE WHEN S.Type = 'Training' THEN S.SessionID END) AS TotalTrainingSessions,
+    SUM(CASE WHEN S.Type = 'Training' THEN (SELECT COUNT(*) 
+                                            FROM Role R 
+                                            WHERE R.TeamID = S.Team1ID OR R.TeamID = S.Team2ID) END) AS TotalPlayersInTraining,
+    COUNT(CASE WHEN S.Type = 'Game' THEN S.SessionID END) AS TotalGameSessions,
+    SUM(CASE WHEN S.Type = 'Game' THEN (SELECT COUNT(*) 
+                                        FROM Role R 
+                                        WHERE R.TeamID = S.Team1ID OR R.TeamID = S.Team2ID) END) AS TotalPlayersInGames
+FROM Location L
+JOIN Session S ON L.LocationID = S.Team1ID OR L.LocationID = S.Team2ID
+WHERE S.StartDateTime BETWEEN '2025-01-01' AND '2025-03-31'
+GROUP BY L.LocationID
+HAVING COUNT(CASE WHEN S.Type = 'Game' THEN S.SessionID END) >= 2
+ORDER BY TotalGameSessions DESC;
     ";
 
     // Execute the query
@@ -58,20 +73,22 @@
             <h2>Query 11</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>Location Name</th>
+                        <th>Total Training Sessions</th>
+                        <th>Total Players in Training</th>
+                        <th>Total Game Sessions</th>
+                        <th>Total Players in Games</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['LocationName']) ?></td>
+                            <td><?= htmlspecialchars($row['TotalTrainingSessions']) ?></td>
+                            <td><?= htmlspecialchars($row['TotalPlayersInTraining']) ?></td>
+                            <td><?= htmlspecialchars($row['TotalGameSessions']) ?></td>
+                            <td><?= htmlspecialchars($row['TotalPlayersInGames']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>

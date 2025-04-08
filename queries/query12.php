@@ -3,7 +3,24 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        SELECT 
+    CM.CMN AS MembershipNumber,
+    P.FirstName,
+    P.LastName,
+    TIMESTAMPDIFF(YEAR, P.DateOfBirth, CURDATE()) AS Age,
+    RA.DateRegistered AS DateOfJoining,
+    P.PhoneNumber,
+    P.Email,
+    L.Name AS CurrentLocationName
+FROM ClubMember CM
+JOIN Person P ON CM.PersonID = P.PersonID
+JOIN RegisteredAt RA ON CM.PrimaryFamilyID = RA.FamilyID
+JOIN Location L ON CM.LocationID = L.LocationID
+WHERE CM.CMN NOT IN (
+    SELECT DISTINCT R.CMN
+    FROM Role R
+)
+ORDER BY L.Name ASC, CM.CMN ASC;
     ";
 
     // Execute the query
@@ -58,20 +75,28 @@
             <h2>Query 12</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>Membership Number</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Age</th>
+                        <th>Date of Joining</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Current Location Name</th>
+                    </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_assoc($result)): ?>
+                    <?php while ($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['MembershipNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['Age']) ?></td>
+                            <td><?= htmlspecialchars($row['DateOfJoining']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['CurrentLocationName']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
