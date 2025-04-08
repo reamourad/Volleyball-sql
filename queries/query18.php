@@ -3,11 +3,68 @@
     require_once '../database.php';
 
     $query = "
-        // Todo: Add your SQL query here
+        DROP VIEW IF EXISTS DeactivatedMembers, TeamsLastSession;
+
+        CREATE VIEW DeactivatedMembers AS
+        SELECT
+            c.CMN,
+            p.FirstName,
+            p.LastName,
+            p.PhoneNumber,
+            p.Email,
+            DATE_ADD(LAST_DAY(DATE_ADD(p.DateOfBirth, INTERVAL 18 YEAR)),
+                    INTERVAL 1 DAY) AS DeactivationDate,
+            c.LocationID
+        FROM Person p
+        JOIN ClubMember c ON c.PersonID = p.PersonID
+        JOIN Location l ON c.LocationID = l.LocationID
+        WHERE p.DateOfBirth <= DATE_SUB(CURDATE(), INTERVAL 18 YEAR);
+
+        CREATE VIEW TeamsLastSession AS
+        SELECT t.TeamID, 
+                max(s.StartDateTime) AS LastSession
+        FROM Team t, Session s
+        WHERE t.TeamID=s.Team1ID OR t.TeamID=s.Team2ID
+        GROUP BY t.TeamID;
+
+        SELECT 
+            dm.FirstName,
+            dm.LastName,
+            dm.PhoneNumber,
+            dm.Email,
+            dm.DeactivationDate,
+            l.Name AS LocationName,
+            r.Position
+        FROM DeactivatedMembers dm
+        JOIN Role r ON dm.CMN = r.CMN
+        JOIN TeamsLastSession tls ON r.TeamID = tls.TeamID
+        JOIN (
+            SELECT r2.CMN, MAX(tls2.LastSession) AS MaxSession
+            FROM Role r2
+            JOIN TeamsLastSession tls2 ON r2.TeamID = tls2.TeamID
+            GROUP BY r2.CMN
+        ) latest ON r.CMN = latest.CMN AND tls.LastSession = latest.MaxSession
+        JOIN Location l ON dm.LocationID = l.LocationID
+        ORDER BY 
+            l.Name,
+            r.Position,
+            dm.FirstName,
+            dm.LastName;
     ";
 
-    // Execute the query
-    $result = mysqli_query($conn, $query);
+    // Execute the query (multiple queries)
+    if (mysqli_multi_query($conn, $query)) {
+        // go through each result set, skip view creation results
+        do {
+            if ($result = mysqli_store_result($conn)) {
+                // SELECT result
+                break;
+            }
+        } while (mysqli_next_result($conn));
+    } else {
+        die("Query failed: " . mysqli_error($conn));
+    }
+    
 
     if (!$result) {
         die("Query failed: " . mysqli_error($conn));
@@ -55,23 +112,29 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 18</h2>
+            <h2>Query 18: Deactivated Members Over 18</h2>
             <table class="data-table">
                 <thead>
-                    <!-- 
-                        //Todo: display attributes needed
-                        example: 
-                        <th>Attribute 1</th>
-                    -->
+                    <tr>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Phone Number</th>
+                        <th>Email</th>
+                        <th>Deactivation Date</th>
+                        <th>Last Location</th>
+                        <th>Last Role</th>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <!-- 
-                                //Todo: display query dynamically based on the name used in the query
-                                example:
-                                <td><?= htmlspecialchars($row['Attribute1']) ?></td>
-                            -->
+                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td><?= htmlspecialchars($row['Email']) ?></td>
+                            <td><?= htmlspecialchars($row['DeactivationDate']) ?></td>
+                            <td><?= htmlspecialchars($row['LocationName']) ?></td>
+                            <td><?= htmlspecialchars($row['Position']) ?></td>
                         </tr>
                     <?php endwhile; ?>
                 </tbody>
