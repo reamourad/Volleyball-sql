@@ -43,7 +43,7 @@
 
             <!-- Reports Dropdown -->
             <li class="dropdown">
-                <a href="#">Reports</a>
+                <a href="#">Queries</a>
                 <ul class="dropdown-content">
                     <li><a href="query9.php">Query 9</a></li>
                     <li><a href="query10.php">Query 10</a></li>
