@@ -3,31 +3,17 @@
     require_once '../database.php';
 
     $query = "
-        SELECT
-            p.FirstName,
-            p.LastName,
-            p.PhoneNumber
-        FROM FamilyMember fm
-        JOIN Person p ON fm.PersonID = p.PersonID
-        JOIN Personnel per ON per.EmployeeID = fm.PersonID
-        JOIN Contract c ON c.EmployeeID = per.EmployeeID
-        JOIN ClubMember cm ON cm.PrimaryFamilyID = fm.PersonID OR cm.AlternativeFamilyID = fm.PersonID
-        JOIN Payment pay ON cm.CMN = pay.CMN
-        JOIN Location l ON c.LocationID = l.LocationID
-        WHERE l.LocationID = 1
-        AND c.EndDate >= CURDATE()
-        AND c.Role = 'Captain'
-        AND pay.MembershipEndDate >= CURDATE()
-        -- captain are in a formation session at this location
-        AND EXISTS (
-            SELECT 1
-            FROM Team t
-            JOIN Session s ON s.Team1ID = t.TeamID OR s.Team2ID = t.TeamID
-            WHERE t.Captain = fm.PersonID
-            AND s.Address = l.Address
-        )
-        GROUP BY fm.PersonID
-        ORDER BY l.Name, fm.PersonID;
+    SELECT DISTINCT 
+        captain.FirstName AS CaptainFirstName, 
+        captain.LastName AS CaptainLastName, 
+        captain.PhoneNumber
+    FROM FamilyMember fm
+    JOIN Person captain ON fm.PersonID = captain.PersonID
+    JOIN Team t ON t.Captain = fm.PersonID
+    JOIN ClubMember cm ON (cm.PrimaryFamilyID = fm.PersonID OR cm.AlternativeFamilyID = fm.PersonID)
+    JOIN Person player ON cm.PersonID = player.PersonID
+    JOIN Location l ON t.LocationID = l.LocationID AND cm.LocationID = l.LocationID
+    WHERE fm.isPrimary = TRUE OR cm.AlternativeFamilyID IS NOT NULL;
     ";
 
     // Execute the query
@@ -87,12 +73,13 @@
                         <th>Last Name</th>
                         <th>Phone Number</th>
                     </tr>
+                    </tr>
                 </thead>
                 <tbody>
                     <?php while($row = mysqli_fetch_assoc($result)): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['FirstName']) ?></td>
-                            <td><?= htmlspecialchars($row['LastName']) ?></td>
+                            <td><?= htmlspecialchars($row['CaptainFirstName']) ?></td>
+                            <td><?= htmlspecialchars($row['CaptainLastName']) ?></td>
                             <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
                         </tr>
                     <?php endwhile; ?>
