@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Add Club Member Members";
+    $page_title = "Add Club Members";
     require_once '../database.php';
 
     if($_SERVER['REQUEST_METHOD'] === 'POST'){
@@ -105,7 +105,7 @@
     <!-- Main Section -->
     <main>
         <div class="form-container">
-            <h1>Add New Family Members</h1>
+            <h1>Add New Club Members</h1>
 
             <!-- Confirming the addition -->
             <?php if(isset($error)):?>
@@ -242,7 +242,7 @@
                 >
                 <br>
                 <p>* This indicates that the field must be filled</p>
-                <button type="submit">Add Family Member</button>
+                <button type="submit">Add Club Member</button>
             </form>
         </div>
     </main>

@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Personnel";
+    $page_title = "Personnel Details";
     require_once '../database.php';
 
     //Get the employee ID from the URL parameter

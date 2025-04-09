@@ -302,7 +302,7 @@
                 <br>
 
                 <p>* This indicates that the field must be filled</p>
-                <button type="submit">Update Family Member</button>
+                <button type="submit">Update Club Member</button>
                 <button class="cancel-btn" onclick="window.location.href='index.php'">Cancel</button>
             </form>
         </div>

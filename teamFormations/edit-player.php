@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Delete Player";
+    $page_title = "Edit Player";
     require_once "../database.php";
 
     // Get the team formation ID and CMN from the URL

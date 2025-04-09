@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Family Members";
+    $page_title = "Email Logs";
     require_once '../database.php';
 
     $query = "
