@@ -84,7 +84,7 @@
     <!-- Footer Section -->
     <footer>
         <div class="footer-content">
-            <h3>Link to the <a href="https://docs.google.com/document/d/1pUyRRn5kpI1VIzMGPuvLELThp76WNGC2LXaYYmLUe3M/edit?tab=t.0#heading=h.ry124sf7v27n" target="_blank">report</a></h3>
+            <h3>Link to the <a href="final-report.pdf" target="_blank">report</a></h3>
             <p>
                 Réa Mourad (40310288) <br>
                 Elizabeth O'Meara (40065959) <br>
