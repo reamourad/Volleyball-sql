@@ -25,39 +25,12 @@
                 INSERT INTO Session(Type, Address, StartDateTime, HeadCoachId, Team1ID, Team2ID) VALUES (?, ?, ?, ?, ?, ?)
             ";
             $stmt = mysqli_prepare($conn, $teamQuery);
-            mysqli_stmt_bind_param($stmt, 'ssdiii', $type, $address, $timing, $headCoachID, $team1, $team2);
+            mysqli_stmt_bind_param($stmt, 'sssiii', $type, $address, $timing, $headCoachID, $team1, $team2);
         
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to create Session: " . mysqli_error($conn));
             }
-            /* TODO
-            //Send email to the captain
-            $emailQuery = "
-                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
-            ";
-
-            //Set the email parameters
-            $subject = "Team Formation Confirmation";
-            $date = date("Y-m-d H:i:s");
-
-            //Write the body for the email
-            $captainQuery = "SELECT CONCAT(FirstName, ' ', LastName) AS CaptainName FROM Person WHERE PersonID = ?";
-            $captainStmt = mysqli_prepare($conn, $captainQuery);
-            mysqli_stmt_bind_param($captainStmt, 'i', $captainID);
-            mysqli_stmt_execute($captainStmt);
-            $captainResult = mysqli_stmt_get_result($captainStmt);
-            $captainRow = mysqli_fetch_assoc($captainResult);
-            $captainName = $captainRow['CaptainName'];
-
-            $first100Chars = "Team {$teamName} has been successfully formed with Captain {$captainName}.";
-
-            $emailStmt = mysqli_prepare($conn, $emailQuery);
-            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $captainID, $subject, $date, $first100Chars);
-
-            if (!mysqli_stmt_execute($emailStmt)) {
-                throw new Exception("Failed to send email: " . mysqli_error($conn));
-            }
-            */
+            
             mysqli_commit($conn);
 
             // Redirect with success parameter
