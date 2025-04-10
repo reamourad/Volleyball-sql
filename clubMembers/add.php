@@ -108,8 +108,8 @@
             <h1>Add New Club Members</h1>
 
             <!-- Confirming the addition -->
-            <?php if(isset($error)):?>
-                <div class="error">Error: <? htmlspecialchars($error)?></div>
+            <?php if(isset($error)): ?>
+                <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
             <form action="add.php" method="POST">
@@ -133,12 +133,12 @@
                     value="<?= isset($_POST['dob']) ? htmlspecialchars($_POST['dob']) : '' ?>"
                 >
                 <br>
-                <label for="sin">SIN:</label>
+                <label for="sin">SIN *:</label>
                 <input type="text" name="sin" id="sin"
                     value="<?= isset($_POST['sin']) ? htmlspecialchars($_POST['sin']) : '' ?>"
                 >
                 <br>
-                <label for="medicare-card">Medicare Card Number:</label>
+                <label for="medicare-card">Medicare Card Number *:</label>
                 <input type="text" name="medicare-card" id="medicare-card"
                     value="<?= isset($_POST['medicare-card']) ? htmlspecialchars($_POST['medicare-card']) : '' ?>"
                 >
@@ -187,12 +187,12 @@
                     <option value="F" <?= isset($_POST['gender']) && $_POST['gender'] === 'F' ? 'selected' : '' ?>>Female</option>
                 </select>
                 <br>
-                <label for="height">Height (in cm):</label>
+                <label for="height">Height (in cm) *:</label>
                 <input type="number" step="0.01" name="height" id="height"
                     value="<?= isset($_POST['height']) ? htmlspecialchars($_POST['height']) : '' ?>"
                 >
                 <br>
-                <label for="weight">Weight (in kg):</label>
+                <label for="weight">Weight (in kg) *:</label>
                 <input type="number" step="0.01" name="weight" id="weight"
                     value="<?= isset($_POST['weight']) ? htmlspecialchars($_POST['weight']) : '' ?>"
                 >

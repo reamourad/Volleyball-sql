@@ -127,8 +127,8 @@
                     value="<?= isset($_POST['location-id']) ? htmlspecialchars($_POST['location-id']) : '' ?>"
                 >
                 <br>
-                <label for="captain-id">Captain ID *:</label>
-                <input type="text" name="captain-id" id="captain-id" required
+                <label for="captain-id">Captain ID:</label>
+                <input type="text" name="captain-id" id="captain-id" 
                     value="<?= isset($_POST['captain-id']) ? htmlspecialchars($_POST['captain-id']) : '' ?>"
                 >
                 <br>

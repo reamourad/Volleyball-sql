@@ -1,5 +1,5 @@
 <?php
-    $page_title = "Team Formation";
+    $page_title = "Teams";
     require_once "../database.php";
 
     $query = "
