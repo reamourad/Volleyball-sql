@@ -53,6 +53,64 @@
                 throw new Exception("Failed to update Session: " . mysqli_error($conn));
             }
 
+            // Get the location from where the head coach is last registered
+            $locationQuery = "
+                SELECT LocationID 
+                FROM Contract 
+                WHERE EmployeeID = ? 
+                AND Role = 'Coach' 
+                ORDER BY StartDate DESC 
+                LIMIT 1
+            ";
+            $locationStmt = mysqli_prepare($conn, $locationQuery);
+            mysqli_stmt_bind_param($locationStmt, 'i', $headCoachID);
+            mysqli_stmt_execute($locationStmt);
+            $locationResult = mysqli_stmt_get_result($locationStmt);
+            $locationRow = mysqli_fetch_assoc($locationResult);
+            $locationID = $locationRow['LocationID'];
+
+            if (!$locationRow) {
+                throw new Exception("Failed to retrieve location for the head coach.");
+            }
+
+            // Get the head coach name
+            $coachQuery = "
+                SELECT CONCAT(FirstName, ' ', LastName) AS CoachName 
+                FROM Person 
+                WHERE PersonID = ?
+            ";
+            $coachStmt = mysqli_prepare($conn, $coachQuery);
+            mysqli_stmt_bind_param($coachStmt, 'i', $headCoachID);
+            mysqli_stmt_execute($coachStmt);
+            $coachResult = mysqli_stmt_get_result($coachStmt);
+            $coachRow = mysqli_fetch_assoc($coachResult);
+            $coachName = $coachRow['CoachName'];
+
+            // Determine if it's a game or training and set the subject and email body accordingly
+            if ($type === "Game") {
+                $subject = "Game Session Update";
+                $first100Chars = "The game session has been successfully updated with Head Coach {$coachName}.";
+            } else if ($type === "Training") {
+                $subject = "Training Session Update";
+                $first100Chars = "The training session has been successfully updated with Head Coach {$coachName}.";
+            } else {
+                throw new Exception("Invalid session type.");
+            }
+
+            // Log the email update for the head coach
+            $emailQuery = "
+                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+            ";
+
+            $date = date("Y-m-d H:i:s");
+
+            $emailStmt = mysqli_prepare($conn, $emailQuery);
+            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $headCoachID, $subject, $date, $first100Chars);
+
+            if (!mysqli_stmt_execute($emailStmt)) {
+                throw new Exception("Failed to log email update: " . mysqli_error($conn));
+            }
+
             mysqli_commit($conn);
 
             // Redirect with success parameter

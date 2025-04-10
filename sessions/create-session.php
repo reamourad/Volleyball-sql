@@ -30,6 +30,64 @@
             if (!mysqli_stmt_execute($stmt)) {
                 throw new Exception("Failed to create Session: " . mysqli_error($conn));
             }
+
+            // Get the location from where the head coach is last registered
+            $locationQuery = "
+                SELECT LocationID 
+                FROM Contract 
+                WHERE EmployeeID = ? 
+                AND Role = 'Coach' 
+                ORDER BY StartDate DESC 
+                LIMIT 1
+            ";
+            $locationStmt = mysqli_prepare($conn, $locationQuery);
+            mysqli_stmt_bind_param($locationStmt, 'i', $headCoachID);
+            mysqli_stmt_execute($locationStmt);
+            $locationResult = mysqli_stmt_get_result($locationStmt);
+            $locationRow = mysqli_fetch_assoc($locationResult);
+            $locationID = $locationRow['LocationID'];
+
+            if (!$locationRow) {
+                throw new Exception("Failed to retrieve location for the head coach.");
+            }
+
+            //Get the head coach name
+            $coachQuery = "
+                SELECT CONCAT(FirstName, ' ', LastName) AS CoachName 
+                FROM Person 
+                WHERE PersonID = ?
+            ";
+            $coachStmt = mysqli_prepare($conn, $coachQuery);
+            mysqli_stmt_bind_param($coachStmt, 'i', $headCoachID);
+            mysqli_stmt_execute($coachStmt);
+            $coachResult = mysqli_stmt_get_result($coachStmt);
+            $coachRow = mysqli_fetch_assoc($coachResult);
+            $coachName = $coachRow['CoachName'];
+
+            // Determine if it's a game or training and set the subject and email body accordingly
+            if ($type === "Game") {
+                $subject = "Game Session Confirmation";
+                $first100Chars = "A new game session has been successfully created with Head Coach {$coachName}.";
+            } else if ($type === "Training") {
+                $subject = "Training Session Confirmation";
+                $first100Chars = "A new training session has been successfully created with Head Coach {$coachName}.";
+            } else {
+                throw new Exception("Invalid session type.");
+            }
+
+            // Send email to the head coach
+            $emailQuery = "
+                INSERT INTO Email (locationID, recipientID, Subject, Date, First100Chars) VALUES (?, ?, ?, ?, ?)
+            ";
+
+            $date = date("Y-m-d H:i:s");
+
+            $emailStmt = mysqli_prepare($conn, $emailQuery);
+            mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $headCoachID, $subject, $date, $first100Chars);
+
+            if (!mysqli_stmt_execute($emailStmt)) {
+                throw new Exception("Failed to send email: " . mysqli_error($conn));
+            }
             
             mysqli_commit($conn);
 
