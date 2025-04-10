@@ -63,10 +63,6 @@
     mysqli_stmt_execute($stmt);
     $result = mysqli_stmt_get_result($stmt);
     $players = mysqli_fetch_all($result, MYSQLI_ASSOC);
-
-    if (!$players) {
-        die("Query failed: " . mysqli_error($conn));
-    }
 ?>
 
 <head>
@@ -114,40 +110,52 @@
             <h2>Team <?= htmlspecialchars($teamName ?: 'Team Not Found') ?> from <?= htmlspecialchars($locationName ?: 'Team Not Found') ?></h2>
             <button class="add-btn" onclick="window.location.href='add-player.php?id=<?= $_GET['id'] ?>'">Add Player</button>
             <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>CMN</th>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Position</th>
-                        <th>Age</th>
-                        <th>Height</th>
-                        <th>Weight</th>
-                        <th>Phone #</th>
-                        <th>Email</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <!-- Displayed dynamically -->
-                    <?php foreach ($players as $player): ?>
+                <?php if (!empty($players)): ?>
+                    <thead>
                         <tr>
-                            <td><?= htmlspecialchars($player['CMN']) ?></td>
-                            <td><?= htmlspecialchars($player['FirstName']) ?></td>
-                            <td><?= htmlspecialchars($player['LastName']) ?></td>
-                            <td><?= htmlspecialchars($player['Position']) ?></td>
-                            <td><?= htmlspecialchars($player['Age']) ?></td>
-                            <td><?= htmlspecialchars($player['Height']) ?></td>
-                            <td><?= htmlspecialchars($player['Weight'])?></td>
-                            <td><?= htmlspecialchars($player['PhoneNumber']) ?></td>
-                            <td><?= htmlspecialchars($player['Email']) ?></td>
-                            <td>
-                                <a href="edit-player.php?id=<?= $teamID?>&cmn=<?=$player['CMN'] ?>" class="edit-btn">Edit</a> 
-                                <a href="remove-player.php?id=<?= $teamID ?>&cmn=<?=$player['CMN']?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this player?')">Delete</a>
-                            </td>
+                            <th>CMN</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Position</th>
+                            <th>Age</th>
+                            <th>Height</th>
+                            <th>Weight</th>
+                            <th>Phone #</th>
+                            <th>Email</th>
+                            <th>Actions</th>
                         </tr>
-                    <?php endforeach; ?>
-                </tbody>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($players as $player): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($player['CMN']) ?></td>
+                                <td><?= htmlspecialchars($player['FirstName']) ?></td>
+                                <td><?= htmlspecialchars($player['LastName']) ?></td>
+                                <td><?= htmlspecialchars($player['Position']) ?></td>
+                                <td><?= htmlspecialchars($player['Age']) ?></td>
+                                <td><?= htmlspecialchars($player['Height']) ?></td>
+                                <td><?= htmlspecialchars($player['Weight'])?></td>
+                                <td><?= htmlspecialchars($player['PhoneNumber']) ?></td>
+                                <td><?= htmlspecialchars($player['Email']) ?></td>
+                                <td>
+                                    <a href="edit-player.php?id=<?= $teamID?>&cmn=<?=$player['CMN'] ?>" class="edit-btn">Edit</a> 
+                                    <a href="remove-player.php?id=<?= $teamID ?>&cmn=<?=$player['CMN']?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this player?')">Delete</a>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                <?php else: ?>
+                    <thead>
+                        <tr>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>No Player Registered in <?= htmlspecialchars($teamName ?: 'Team Not Found') ?></td>
+                        </tr>
+                    </tbody>
+                <?php endif; ?>
             </table>
         </div>
     </main>
