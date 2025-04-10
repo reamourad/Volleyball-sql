@@ -1,26 +1,26 @@
 <?php
-    $page_title = "Locations";
-    require_once '../database.php';
+    $page_title = "Sessions";
+    require_once "../database.php";
 
     $query = "
-        SELECT 
-            l.*,
-            CONCAT(p.FirstName, ' ', p.LastName) AS FullName
-        FROM 
-            Location l
-        LEFT JOIN 
-            Contract c ON l.LocationID = c.LocationID AND c.Role = 'General Manager'
-        LEFT JOIN
-            Person p ON p.PersonID = c.EmployeeID
-        ORDER BY Province ASC, City ASC
+        SELECT s.SessionID,
+                s.StartDateTime,
+                s.Type,
+                CONCAT(p.FirstName, ' ', p.LastName) AS HeadCoach,
+                t1.TeamName AS Team1,
+                s.Score1,
+                s.Score2,
+                t2.TeamName AS Team2,
+                s.Address
+        FROM Session s
+        JOIN Team t1 ON s.Team1ID=t1.TeamID
+        JOIN Team t2 ON s.Team2ID=t2.TeamID
+        JOIN Person p ON s.HeadCoachID=p.PersonID
+        ORDER BY s.StartDateTime, s.Type;
     ";
-
-    // Execute the query
+    
     $result = mysqli_query($conn, $query);
-
-    if (!$result) {
-        die("Query failed: " . mysqli_error($conn));
-    }
+    $rows = mysqli_fetch_all($result, MYSQLI_ASSOC);
 ?>
 
 <head>
@@ -65,46 +65,39 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>List of Locations</h2>
-            <button class="add-btn" onclick="window.location.href='add.php'">Add New Location</button>
+            <h2>List of Scheduled Sessions</h2>
+            <button class="add-btn" onclick="window.location.href='create-session.php'">Add Session</button>
             <table class="data-table">
                 <thead>
                     <tr>
-                        <th>Location ID</th>
-                        <th>Type</th>
-                        <th>Head Manager</th>
-                        <th>Name</th>
+                        <th>Session Date and Time</th>
                         <th>Address</th>
-                        <th>City</th>
-                        <th>Province</th>
-                        <th>Postal Code</th>
-                        <th>Phone Number</th>
-                        <th>Website</th>
-                        <th>Capacity</th>
+                        <th>Type</th>
+                        <th>Head Coach</th>
+                        <th>Team 1</th>
+                        <th>Team 1 Score</th>
+                        <th>Team 2 Score</th>
+                        <th>Team 2</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_assoc($result)): ?>
+                    <?php foreach ($rows as $row): ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['LocationID']) ?></td>
-                            <td><?= htmlspecialchars($row['Type']) ?></td>
-                            <td><?= !empty($row['FullName']) ? htmlspecialchars($row['FullName']) : '' ?></td>
-                            <td><?= htmlspecialchars($row['Name']) ?></td>
+                            <td><?= htmlspecialchars($row['StartDateTime']) ?></td>
                             <td><?= htmlspecialchars($row['Address']) ?></td>
-                            <td><?= htmlspecialchars($row['City']) ?></td>
-                            <td><?= htmlspecialchars($row['Province']) ?></td>
-                            <td><?= htmlspecialchars($row['PostalCode']) ?></td>
-                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
-                            <td><?= htmlspecialchars($row['Website']) ?></td>
-                            <td><?= htmlspecialchars($row['Capacity']) ?></td>
-
-                            <td class="action-links">
-                                <a href="edit.php?id=<?= $row['LocationID'] ?>">Edit</a>
-                                <a href="delete.php?id=<?= $row['LocationID'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                            <td><?= htmlspecialchars($row['Type']) ?></td>
+                            <td><?= htmlspecialchars($row['HeadCoach']) ?></td>
+                            <td><?= htmlspecialchars($row['Team1']) ?></td>
+                            <td><?= htmlspecialchars($row['Score1']) ?></td>
+                            <td><?= htmlspecialchars($row['Score2']) ?></td>
+                            <td><?= htmlspecialchars($row['Team2']) ?></td>
+                            <td>
+                                <a href="edit-session.php?id=<?= $row['SessionID'] ?>" class="edit-btn">Edit</a>
+                                <a href="delete-session.php?id=<?= $row['SessionID'] ?>" class="delete-btn" onclick="return confirm('Are you sure you want to cancel this session?')">Cancel</a>
                             </td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
