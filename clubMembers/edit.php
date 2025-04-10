@@ -142,6 +142,7 @@
             <li><a href="../personnels/index.php">Personnel</a></li>
             <li><a href="../locations/index.php">Locations</a></li>
             <li><a href="../teamFormations/index.php">Team Formation</a></li>
+            <li><a href="../sessions/index.php">Sessions</a></li>
             <li><a href="../emailLog/index.php">Email Logs</a></li>
 
             <!-- Reports Dropdown -->
