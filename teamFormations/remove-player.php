@@ -41,7 +41,21 @@
     $teamName = $teamRow['TeamName'];
     $locationID = $teamRow['LocationID'];
 
-    $first100Chars = "You have been removed from the {$teamName} Team. Good luck in your future endeavors.";
+    //Get the player name
+    $playerQuery = "
+        SELECT CONCAT(p.FirstName, ' ', p.LastName) AS PlayerName
+        FROM ClubMember cm
+        JOIN Person p ON p.PersonID = cm.PersonID
+        WHERE cm.CMN = ?
+    ";
+    $playerStmt = mysqli_prepare($conn, $playerQuery);
+    mysqli_stmt_bind_param($playerStmt, 'i', $cmn);
+    mysqli_stmt_execute($playerStmt);
+    $playerResult = mysqli_stmt_get_result($playerStmt);
+    $playerRow = mysqli_fetch_assoc($playerResult);
+    $playerName = $playerRow['PlayerName'];
+
+    $first100Chars = "{$playerName} have been removed from the {$teamName} Team.";
 
     $emailStmt = mysqli_prepare($conn, $emailQuery);
     mysqli_stmt_bind_param($emailStmt, 'iisss', $locationID, $cmn, $subject, $date, $first100Chars);
