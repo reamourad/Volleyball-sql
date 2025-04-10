@@ -2,30 +2,51 @@
     $page_title = "Query 15";
     require_once '../database.php';
 
-    $query = "
-    SELECT DISTINCT 
-        captain.FirstName AS CaptainFirstName, 
-        captain.LastName AS CaptainLastName, 
-        captain.PhoneNumber
-    FROM FamilyMember fm
-    JOIN Person captain ON fm.PersonID = captain.PersonID
-    JOIN Team t ON t.Captain = fm.PersonID
-    JOIN ClubMember cm ON (cm.PrimaryFamilyID = fm.PersonID OR cm.AlternativeFamilyID = fm.PersonID)
-    JOIN Person player ON cm.PersonID = player.PersonID
-    JOIN Location l ON t.LocationID = l.LocationID AND cm.LocationID = l.LocationID
-    WHERE fm.isPrimary = TRUE OR cm.AlternativeFamilyID IS NOT NULL;
-    ";
+    // Get the location name from the form
+    $location = isset($_GET['location']) ? trim($_GET['location']) : null;
 
-    // Execute the query
-    $result = mysqli_query($conn, $query);
+    $result = null; 
 
-    if (!$result) {
-        die("Query failed: " . mysqli_error($conn));
+    if ($location) {
+       
+        $stmt = $conn->prepare("
+            SELECT DISTINCT 
+                captain.FirstName AS CaptainFirstName, 
+                captain.LastName AS CaptainLastName, 
+                captain.PhoneNumber
+            FROM FamilyMember fm
+            JOIN Person captain ON fm.PersonID = captain.PersonID
+            JOIN Team t ON t.Captain = fm.PersonID
+            JOIN ClubMember cm ON (cm.PrimaryFamilyID = fm.PersonID OR cm.AlternativeFamilyID = fm.PersonID)
+            JOIN Location l ON t.LocationID = l.LocationID
+            WHERE (fm.isPrimary = TRUE OR cm.AlternativeFamilyID IS NOT NULL)
+            AND l.Name = ?
+        ");
+
+        //take location param and bind it to the query
+        if ($stmt) {
+            
+            $stmt->bind_param("s", $location);
+
+            
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            
+            if (!$result) {
+                die("Query failed: " . $stmt->error);
+            }
+
+           
+            $stmt->close();
+        } else {
+            die("Failed to prepare the query: " . $conn->error);
+        }
     }
 ?>
 
 <head>
-    <title><?= $page_title ?></title>
+    <title><?= htmlspecialchars($page_title) ?></title>
     <link rel="stylesheet" type="text/css" href="../css/navbar.css">
     <link rel="stylesheet" type="text/css" href="../css/footer.css">
     <link rel="stylesheet" type="text/css" href="../css/global.css">
@@ -65,7 +86,12 @@
     <!-- Main Section -->
     <main>
         <div class="list-container">
-            <h2>Query 15: List of Captains with Active Related Members at Their Location</h2>
+        <h2>Query 15: List of Captains with Active Related Members at <?= htmlspecialchars($location) ?: 'the Specified Location' ?></h2>
+            <form method="GET" action="query15.php">
+                <label for="location">Enter Location Name:</label>
+                <input type="text" id="location" name="location" required>
+                <button type="submit">Search</button>
+            </form>
             <table class="data-table">
                 <thead>
                     <tr>
@@ -73,16 +99,21 @@
                         <th>Last Name</th>
                         <th>Phone Number</th>
                     </tr>
-                    </tr>
                 </thead>
                 <tbody>
-                    <?php while($row = mysqli_fetch_assoc($result)): ?>
+                    <?php if ($result && $result->num_rows > 0): ?>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                            <tr>
+                                <td><?= htmlspecialchars($row['CaptainFirstName']) ?></td>
+                                <td><?= htmlspecialchars($row['CaptainLastName']) ?></td>
+                                <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            </tr>
+                        <?php endwhile; ?>
+                    <?php else: ?>
                         <tr>
-                            <td><?= htmlspecialchars($row['CaptainFirstName']) ?></td>
-                            <td><?= htmlspecialchars($row['CaptainLastName']) ?></td>
-                            <td><?= htmlspecialchars($row['PhoneNumber']) ?></td>
+                            <td colspan="3">No results found for the specified location.</td>
                         </tr>
-                    <?php endwhile; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
