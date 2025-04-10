@@ -27,7 +27,7 @@
         WHERE t.TeamID=s.Team1ID OR t.TeamID=s.Team2ID
         GROUP BY t.TeamID;
 
-        SELECT 
+        SELECT DISTINCT
             dm.FirstName,
             dm.LastName,
             dm.PhoneNumber,
