@@ -91,10 +91,6 @@
                 <div class="error" style="color: red; font-weight: bold; margin-top: 20px;">Error: <?= htmlspecialchars($error) ?></div>
             <?php endif; ?>
 
-            <!--
-        $team1 = mysqli_real_escape_string($conn, $_POST['team1ID']);
-        $team2 = mysqli_real_escape_string($conn, $_POST['team2ID']);
-            -->
 
             <form action="create-session.php" method="POST">
                 <label for="type">Session Type *:</label>
@@ -143,14 +139,14 @@
     
     <!-- to ensure selected teams are different -->
     <script>
-    document.querySelector('form').addEventListener('submit', function (e) {
-        const team1 = document.getElementById('team1ID').value;
-        const team2 = document.getElementById('team2ID').value;
+        document.querySelector('form').addEventListener('submit', function (e) {
+            const team1 = document.getElementById('team1ID').value;
+            const team2 = document.getElementById('team2ID').value;
 
-        if (team1 === team2) {
-            alert("Team 1 and Team 2 must be different.");
-            e.preventDefault(); // stop form from submitting
-        }
-    });
-</script>
+            if (team1 === team2) {
+                alert("Team 1 and Team 2 must be different.");
+                e.preventDefault(); // stop form from submitting
+            }
+        });
+    </script>
 </body>
