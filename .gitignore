@@ -1,0 +1,7 @@
+//env file
+.env
+
+//Composer modules
+/vendor
+composer.json
+composer.lock
