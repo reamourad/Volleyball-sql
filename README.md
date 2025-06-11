@@ -1,7 +1,9 @@
 # Montréal Youth Volleyball Club - Database Management GUI
 
 ## Project Description
-This project implements a graphical user interface (GUI) to facilitate the management of the database for the Montréal Youth Volleyball Club. The system allows users to efficiently manage and interact with club-related data through an intuitive web-based interface.
+This project is a full-stack web-based database management system designed for the "Montréal Youth Volleyball Club". It provides a user-friendly GUI that enables administrators to perform CRUD operations (Create, Read, Update, Delete) on structured club data, including members, teams, events, and payments.
+
+Built using PHP and MySQL, the system emphasizes backend data consistency, input validation, and secure database interaction. 
 
 ## Team Members
 | Name                     | Student ID        |
@@ -67,8 +69,14 @@ This project implements a graphical user interface (GUI) to facilitate the manag
 3. Open the `.env` file in your preferred text editor and configure the database settings (e.g., SERVERNAME, USEWRNAME, PASSWORD, NAME) to match your XAMPP MySQL configuration.
 
 ### Step 5: Run the Project in a Browser
+
+##
 1. Ensure that XAMPP is running (Apache and MySQL services should be started).
 2. Open a web browser and go to:
    ```sh
    http://localhost/[Project Folder Name]
    ```
+
+### Product 
+![volleyball-1](https://github.com/user-attachments/assets/d99f8677-ba96-4d23-a598-a601b30a5c55)
+![volleyball-2](https://github.com/user-attachments/assets/8731ab56-47a4-4807-ad7a-12a798b37bd8)
